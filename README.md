@@ -1,4 +1,4 @@
-# 📈 Stock Price Predictor - LSTM
+# Stock Price Predictor - LSTM
 
 > Projeto de Machine Learning para previsão de preços de ações usando Deep Learning (LSTM)
 > 
@@ -8,13 +8,13 @@
 
 ---
 
-## 🎯 Objetivo
+## Objetivo
 
 Desenvolver um modelo de **rede neural LSTM (Long Short-Term Memory)** capaz de prever o preço de fechamento do próximo dia de uma ação, utilizando os últimos 60 dias de histórico como entrada.
 
 ---
 
-## 📊 Resultados Obtidos
+## Resultados Obtidos
 
 | Métrica | Valor | Interpretação |
 |---------|-------|---------------|
@@ -22,12 +22,12 @@ Desenvolver um modelo de **rede neural LSTM (Long Short-Term Memory)** capaz de 
 | **RMSE** | R$ 0.89 | Erro médio em reais |
 | **MAE** | R$ 0.70 | Erro absoluto médio |
 
-### Diagnóstico: ✅ EXCELENTE
+### Diagnóstico: EXCELENTE
 O modelo apresenta alta precisão, errando em média apenas R$ 0.89 por previsão.
 
 ---
 
-## 🏗️ Arquitetura do Modelo
+## Arquitetura do Modelo
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -59,38 +59,38 @@ O modelo apresenta alta precisão, errando em média apenas R$ 0.89 por previsã
 
 ---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 tech-challenge-lstm/
-├── 📄 README.md                 # Este arquivo
-├── 📄 PROGRESS.md               # Acompanhamento do projeto
-├── 📄 requirements.txt          # Dependências Python
-├── 🐳 Dockerfile                # Containerização
-├── 🐳 docker-compose.yml        # Orquestração
+├── README.md                 # Este arquivo
+├── PROGRESS.md               # Acompanhamento do projeto
+├── requirements.txt          # Dependências Python
+├── Dockerfile                # Containerização
+├── docker-compose.yml        # Orquestração
 │
-├── 📁 src/                      # Código-fonte
-│   ├── data_collection.py       # Coleta de dados (yfinance)
-│   ├── preprocessing.py         # Normalização e janelas
-│   ├── model.py                 # Arquitetura LSTM
-│   ├── train.py                 # Loop de treinamento
-│   ├── evaluate.py              # Métricas de avaliação
-│   └── app.py                   # API FastAPI
+├── src/                      # Código-fonte
+│   ├── data_collection.py    # Coleta de dados (yfinance)
+│   ├── preprocessing.py      # Normalização e janelas
+│   ├── model.py              # Arquitetura LSTM
+│   ├── train.py              # Loop de treinamento
+│   ├── evaluate.py           # Métricas de avaliação
+│   └── app.py                # API FastAPI
 │
-├── 📁 models/                   # Artefatos salvos
-│   ├── model_lstm.pth           # Modelo treinado
-│   ├── scaler.pkl               # Normalizador MinMaxScaler
-│   ├── config.pkl               # Configurações
-│   ├── training_history.png     # Gráfico de treino
+├── models/                   # Artefatos salvos
+│   ├── model_lstm.pth        # Modelo treinado
+│   ├── scaler.pkl            # Normalizador MinMaxScaler
+│   ├── config.pkl            # Configurações
+│   ├── training_history.png  # Gráfico de treino
 │   └── predictions_vs_actual.png # Gráfico de previsões
 │
-└── 📁 data/                     # Dados históricos
-    └── data_PETR4_SA.csv        # PETR4.SA (2018-2024)
+└── data/                     # Dados históricos
+    └── data_PETR4_SA.csv     # PETR4.SA (2018-2024)
 ```
 
 ---
 
-## 🚀 Como Executar
+## Como Executar
 
 ### Opção 1: Docker (Recomendado)
 
@@ -123,7 +123,7 @@ uvicorn app:app --reload
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### GET /health
 Verifica o status da API e do modelo.
@@ -178,7 +178,7 @@ http://localhost:8000/docs
 
 ---
 
-## 📋 Dados Utilizados
+## Dados Utilizados
 
 | Propriedade | Valor |
 |-------------|-------|
@@ -190,7 +190,7 @@ http://localhost:8000/docs
 
 ---
 
-## 🧠 Treinamento
+## Treinamento
 
 | Parâmetro | Valor |
 |-----------|-------|
@@ -204,7 +204,7 @@ http://localhost:8000/docs
 
 ---
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 - **Python 3.10+**
 - **PyTorch** - Framework de Deep Learning
@@ -216,21 +216,8 @@ http://localhost:8000/docs
 
 ---
 
-## 📚 Referências Teóricas
+## Referências Teóricas
 
 - **LSTM (Long Short-Term Memory):** Arquitetura de rede neural recorrente com células de memória e portões (gates) para capturar dependências de longo prazo em sequências.
 - **Backpropagation Through Time (BPTT):** Algoritmo de treinamento que propaga o erro ao longo do tempo.
 - **MinMaxScaler:** Normalização dos dados entre 0 e 1 para melhor convergência.
-
----
-
-## 👨‍💻 Autor
-
-**Tech Challenge - Fase 4**  
-Pós-graduação em Machine Learning Engineering
-
----
-
-## 📄 Licença
-
-Este projeto foi desenvolvido para fins educacionais como parte do Tech Challenge da Fase 4.
