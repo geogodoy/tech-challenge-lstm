@@ -1,0 +1,162 @@
+Guia da fonte
+Este material educacional detalha o funcionamento e as aplicações dos modelos generativos no campo da engenharia de aprendizado de máquina, com foco central na arquitetura de AutoEncoders. O texto explica como o sistema utiliza um Encoder para comprimir dados em uma representação abstrata e um Decoder para reconstruir a informação original, permitindo tarefas que vão desde a transferência de estilo artístico até a remoção de ruídos e colorização de imagens. Além disso, a fonte explora conceitos avançados como modelos adversariais, mecanismos de atenção e a detecção de anomalias por meio do erro de reconstrução. Por fim, o conteúdo propõe uma reflexão crítica sobre as implicações éticas dessas tecnologias, abordando temas sensíveis como direitos autorais, vieses nos dados de treinamento e a criação de conteúdos falsos.
+
+
+
+
+
+
+POS TECH
+MACHINE LEARNING ENGINEERING
+FASE 4 AULA 04 -
+MODELOS GENERATIVOS
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos
+O QUE VEM POR AÍ?
+HANDS ON
+SAIBA MAIS
+O QUE VOCÊ VIU NESTA AULA? REFERÊNCIAS.
+SUMÁRIO
+Página 2 de 15
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+3
+4
+5
+12
+13
+Modelos Generativos
+O QUE VEM POR AÍ?
+Página 3 de 15
+Alguns aplicativos oferecem diversos filtros, que funcionam das mais diversas formas: alguns deles são capazes de alterar completamente a imagem de base. Alguns são tão bons que as imagens geradas por eles transformam qualquer foto em uma peça artística.
+O principal mecanismo por trás deles é a transferência de estilos, que é um método bem simples de ser treinado e não exige muita base, principalmente quando se inicia de um modelo pré-treinado. A ideia deles é que um modelo aprende a reconstruir uma imagem levando em consideração um estilo desejado.
+Então, após treinado, qualquer imagem apresentada ao modelo é reconstruída, forçando com que essa imagem se pareça o máximo possível com as imagens usadas para o treino. Ele mantém as formas, mas altera os traçados.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos
+HANDS ON
+Página 4 de 15
+Nesta aula vamos entender melhor como os AutoEncoders podem ser usados para as várias tarefas. Vamos comentar também sobre os modelos Adversariais. Por fim, vamos discutir as evoluções dos modelos e apresentar as discussões éticas levantadas sobre essa categoria de modelos.
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos
+SAIBA MAIS
+Página 5 de 15
+Até aqui vimos como funciona o processo de interpretar uma imagem a partir de diversas técnicas. Entre os problemas, comentamos rapidamente sobre tratamentos de imagens, onde a normalização dos contrastes de uma imagem é um exemplo desse tratamento. No entanto, esses tratamentos são limitados. Agora, falaremos sobre modelos generativos.
+Um AutoEncoder é uma arquitetura de rede neural que consiste em tentar reconstruir, em sua saída, a entrada de forma idêntica. O treinamento de um AutoEncoder é considerado um processo de aprendizado não-supervisionado, pois não precisa haver anotações quanto às classes ou aos objetos.
+6
+Encoder
+Decoder
+6
+Original input
+Compressed representation
+Figura 1 - Topologia de um AutoEncoder Fonte: Bank; Koenigstein; Giryes (2020)
+Reconstructed input
+O AutoEncoder é dividido em duas partes. A primeira é o Encoder, que tem o objetivo de obter uma representação comprimida da imagem de entrada, chamada de Embedding. A segunda é o Decoder, que converte um embedding de volta na imagem original. Existem ainda as arquiteturas Adversariais, que além do AutoEncoder também empregam um modelo discriminativo para determinar se uma imagem é uma reconstrução feita pelo AutoEncoder ou a imagem original.
+O objetivo do AutoEncoder é que o modelo discriminativo não consiga saber a diferença entre uma imagem real e uma reconstruída, enquanto o objetivo do modelo discriminativo é acertar quando a imagem é real e quando é gerada. Isso tende a melhorar a qualidade das imagens geradas por forçar o AutoEncoder a gerar imagens cada vez mais realistas para "ganhar" do modelo discriminante.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos
+Página 6 de 15
+Inicialmente as aplicações deste método envolvem a conversão direta de uma imagem em outra, mas também é possível reaproveitar as partes separadas do AutoEncoder para desenvolver modelos de classificação.
+Uma das primeiras aplicações de métodos de transformação de imagens era usado para a remoção de ruídos. O AutoEncoder é muito eficiente para esse propósito, pois durante o seu processo de aprendizado ele tende a remover a alta frequência de variação das texturas da imagem e um ruído é uma forma de textura de alta frequência.
+É comum observar, por exemplo, que imagens reconstruídas por AutoEncoders tendem a ser embaçadas. O AutoEncoder também serve para melhorar as imagens. Entre essas melhorias, podemos citar a melhoria das cores, o que deixa imagens mais claras, ou que também melhora o contraste entre as cores. Também é possível melhorar a resolução das imagens, garantindo a qualidade ao se alterar seu tamanho. Uma outra aplicação é a utilização de AutoEncoders para fazer a "colorização de imagens em escala de cinza.
+Figura 2 - Colorização Fonte: Singh; Arora; Sharma (2022)
+Outra aplicação que envolve a transformação de imagens é a transferência de estilos. Essa aplicação foi muito divulgada por gerar imagens inusitadas, muitas vezes de forma gratuita. Na situação anterior, o modelo era treinado com o objetivo de reconstruir, pixel por pixel, a imagem original. Nessa nova aplicação o modelo precisa aprender correlações entre pixels próximos, de forma que quando for reconstruir uma imagem, essas correlações vão guiar como os pixels são gerados.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos
+Página 7 de 15
+Com isso, você treina o modelo para aprender as características em um Picasso ou um Van Gogh. Depois, uma imagem qualquer é apresentada ao modelo, que como resposta retorna uma imagem com os contornos da imagem apresentada, mas com traços e estilos da obra em que foi treinado.
+Figura 3 - Tranferência de estilo Fonte: Nemire (2018) [4]
+Uma outra aplicação dos AutoEncoders vem na forma de detecção de anomalias. Um problema conhecido dos AutoEncoders é o fato de ser comum que ele passe por um "super-ajuste" ao conjunto de treino (overfitting). Em consequência desenvolveu-se diversas estruturas de regularização para tentar reduzir isso, incrementando a capacidade de extrapolação do modelo para imagens em um ambiente real. Mas para a questão de detecção de anomalias o "super-ajuste não é um problema.
+Nesse caso o modelo aprende muito bem o conjunto de treinamento. Daí, quando alguma imagem é apresentada, ele acaba reconstruindo a imagem como algo próximo de outras imagens que ele viu anteriormente no conjunto de treino. Então, se a imagem reconstruída for próxima da imagem original, pressupõe-se que a imagem é similar ao que foi aprendido pelo modelo.
+Se as imagens de entrada e saída forem muito diferentes, pressupõe-se que ela não era do mesmo domínio das imagens treinadas e é marcada como uma anomalia. Nesse caso ainda é possível encontrar qual seria a região que mais contribui com o erro e indicá-la como um objeto anômalo.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos
+Normal
+Abnormal
+Página 8 de 15
+Input
+Reconstruction
+Reconstruction Error
+Figura 4 - Detecção de Anomalias Fonte: Nakao, et al. (2021) [5]
+A próxima é a geração de imagens. Novamente, o modelo faz um "super-ajuste" da base de treino. O modelo também é composto por duas partes, o Encoder e o Decoder, sendo que a saída do Encoder e a entrada do Decoder é um embedding, que representa duas partes. Vamos falar agora do que acontece quando usamos só o Decoder para inferência.
+O Decoder é responsável por, a partir do embedding, restaurar uma imagem. Se soubermos o domínio do embedding é possível gerar embeddings aleatórios, que por sua vez são apresentados ao Decoder, que por sua vez vai gerar uma imagem aleatória.
+O que acontece é que o Decoder "super-ajustado" vai criar uma imagem muito similar às imagens do conjunto de treino. Esse processo de geração de imagens pode ser usado, entre outras tarefas, para criar imagens para serem adicionadas ao conjunto de treino (data augmentation) ou ainda como uma ferramenta para memorização ou compactação de uma base com muitas imagens.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos
+Página 9 de 15
+VAE
+VQ-VAE
+RVQ-VAE
+Figura 5 - Geração de faces com VAE Fonte: Lai, Zou e Lerman. (2022) [6]
+O Encoder é responsável por converter uma imagem de entrada em um embedding, que é uma representação abstrata da imagem. Geralmente essa representação tem uma dimensionalidade menor que a imagem original. Esses embeddings podem então ser armazenados e depois usados para compactar as imagens da base de treino.
+Uma outra utilidade é reaproveitar o Encoder para outros tipos de solução. Por exemplo, ele pode ser usado como entrada de um modelo de classificação. Aqui entra a ideia de um modelo semi-supervisionado. Em um modelo supervisionado todos os exemplos de treino estão anotados, com qualquer que seja o seu objetivo. Em um modelo não supervisionado, não existem exemplos anotados. O semi-supervisionado é o meio termo.
+Algumas amostras possuem anotação, a maioria não. Então, o comum é treinar um AutoEncoder, em cima dos dados, e depois usa-se os embeddings do Encoder para treinar um modelo supervisionado com os dados que estão marcados. Finalmente, para inferência, o Decoder é descartado e a imagem é apresentada ao Encoder, que gera um embedding. O modelo supervisionado então converte o embedding na saída apropriada.
+Agora, antes de entrarmos na segunda parte da aula, recomendo uma olhada rápida no seu buscador favorito sobre as Smart TVs com tecnologias de IA. Entre as novidades propostas está a suposta solução de um grande problema com as resoluções de tela maiores que FullHD: não existe tanto conteúdo nessa resolução para fazer sentido alguém comprar a TV.
+Os produtores e produtoras de TV criaram, então, uma integração direta na tela que faz o upscalling da imagem (aumento da resolução) enquanto exibe a imagem. E
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos
+Página 10 de 15
+mais, eles também adicionam novos quadros entre dois quadros para dar uma sensação melhor de movimento. Outras ideias também envolvem a melhoria da imagem, como por exemplo para ter cores mais vibrantes e contrastes melhores na exibição de imagens. Para tanto, eles devem usar justamente modelos como os apresentados aqui.
+Inicialmente, esses modelos eram compostos basicamente por camadas convolucionais e densas e algumas transformações simples. Mas com a evolução da área, novos elementos foram adicionados à mistura.
+Uma dessas inovações é o mecanismo de atenção. Ele é usado para criar uma informação de correlação entre partes das imagens. Essas correlações podem ser espaciais, como a correlação entre partes diferentes de uma imagem, ou elas podem ser de canais, como a correlação entre as diversas características extraídas.
+Um exemplo em que esse mecanismo ajuda, por exemplo, é na transferência de estilos. O modelo que aprendeu o estilo de um artista pode se comportar diferentemente quando se trata de uma imagem do céu, ter outro comportamento no caso de ser uma imagem de árvore e um terceiro se for uma casa. Isso faz a transferência parecer mais realista, pois anteriormente a transferência criava imagens homogêneas.
+Outra melhoria veio com o surgimento das redes de cápsulas. Uma cápsula é um neurônio representado como um vetor. Isso preserva as hierarquias entre os extratores de características, facilitando o entendimento da imagem. Esse modelo também ajuda o modelo a entender as estruturas contidas nas imagens.
+O problema do "super-ajuste" promovido por esse tipo de modelo também traz outros problemas, de considerações éticas. Um bom exemplo é sobre quando o modelo começa a infringir os limites de privacidade e direitos autorais.
+Como esses modelos são treinados com bancos de imagens, que podem conter milhares de imagens, fica muito difícil determinar se há licenças para todas elas e se essa licença pode ser aplicada ao uso pretendido do modelo. Outro problema é sobre como essas imagens serão usadas, seja para criar notícias falsas ou imagens de pessoas reais em situações falsas também.
+Nesses casos, seria interessante ter um modelo verificador. Conforme apresentado anteriormente, o método de detecção de anomalias poderia ser usado
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Modelos Generativos
+Página 11 de 15
+para determinar se uma imagem qualquer é plágio de algum artista. A ideia é treinar um modelo em cima de imagens do artista em questão. A imagem que deseja se comprovar o plágio é apresentada ao modelo, que gera uma nova versão daquela imagem. Então, a partir da diferença entre a imagem original e a imagem criada, pode- se considerar plágio se a diferença estiver abaixo de um certo nível.
+Também deve-se considerar os vieses nos dados de treino. Geralmente, os problemas são causados por desbalanceamento de classes. Por exemplo: se a maioria das imagens de treino forem paisagens urbanas, o modelo vai dar preferência para gerar esse tipo de imagens. Mas existe um bias benéfico que impede a geração de imagens sem sentido, a não ser quando há algum cunho artístico envolvido.
+Recomendo que você dê uma olhada nesses modelos para se aprofundar mais nos assuntos. O site Papers WithCode apresentado na última aula pode ajudar a iniciar a pesquisa. Também acho interessante que você pesquise sobre as implicações éticas do uso desses modelos.
+FIAR
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos
+O QUE VOCÊ VIU NESTA AULA?
+Página 12 de 15
+Nesta aula vimos como funcionam os modelos generativos de imagem para imagem. Começamos pelos AutoEncoders e apresentamos os modelos Adversariais. Também conversamos sobre as aplicações dos modelos, discutimos as evoluções deles e sobre os problemas éticos desse tipo de modelo.
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos
+REFERÊNCIAS
+Página 13 de 15
+BANK, D.; KOENIGSTEIN, N.; GIRYES, R. Autoencoders. Machine learning for data science handbook: data mining and knowledge discovery handbook. 2020. Disponível
+em:
+<https://www.researchgate.net/publication/339945889_Autoencoders>. Acesso em: 26 jul. 2024.
+LAI, C. H.; ZOU, D.; LERMAN, G. Robust Vector Quantized-Variational Autoencoder.
+2022. Disponível <https://www.researchgate.net/publication/358402144_Robust_Vector_Quantized- Variational_Autoencoder>. Acesso em: 26 jul. 2024.
+em:
+NAKAO, T., et al. Unsupervised Deep Anomaly Detection in Chest Radiographs. 2021. Disponível em: <https://link.springer.com/article/10.1007/s10278-020-00413- 2>. Acesso em: 26 jul. 2024.
+em:
+NEMIRE, B. New Al Style Transfer Algorithm Allows Users to Create Millions of Artistic Combinations. 2018. Disponível <https://developer.nvidia.com/blog/new-ai-style-transfer-algorithm-allows-users-to- create-millions-of-artistic-combinations/>. Acesso em: 26 jul. 2024.
+2019.
+SINGH, K., et al. A comprehensive review of convolutional neural network based image enhancement techniques. Disponível em: <https://www.researchgate.net/publication/336782004_A_Comprehensive_Review_o
+f_Convolutional_Neural_Network_based_Image_Enhancement_Techniques>. Acesso em: 26 jul. 2024.
+SINGH, V.; ARORA, D.; SHARMA, P. Image colorization using deep convolution autoencoder.
+2022.
+Disponível
+em: <https://www.researchgate.net/publication/357863037_Image_Colorization_Using_D eep_Convolution_Autoencoder>. Acesso em: 26 jul. 2024.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos
+PALAVRAS-CHAVE
+AutoEncoder. Adversarial. Transformação de Imagens.
+FIA
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Página 14 de 15
+POS TECH
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com

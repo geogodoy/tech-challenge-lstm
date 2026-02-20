@@ -1,0 +1,149 @@
+Guia da fonte
+Este material didático explora as diversas arquiteturas de redes generativas e suas aplicações práticas na criação de novos dados, como imagens, sons e textos. O texto detalha o funcionamento das GANs, que operam através de uma disputa entre gerador e discriminador, e dos VAEs, que utilizam codificação e decodificação para sintetizar informações. Além disso, a aula abrange modelos autorregressivos e sequenciais, como RNNs e LSTMs, destacando como essas tecnologias fundamentam avanços modernos em inteligência artificial. O objetivo central é fornecer uma compreensão teórica e prática sobre como algoritmos matemáticos podem gerar conteúdos realistas e transformar a interação humana com sistemas digitais.
+
+
+
+
+
+
+POS TECH
+MACHINE LEARNING ENGINEERING
+FASE 4 | AULA 02 -
+ESTRUTURAS DE REDES GENERATIVAS
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+O QUE VEM POR AÍ?
+3
+HANDS ON
+.4
+SAIBA MAIS
+5
+O QUE VOCÊ VIU NESTA AULA?
+.12
+REFERÊNCIAS
+13
+SUMÁRIO
+Página 2 de 15
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+O QUE VEM POR AÍ?
+Página 3 de 15
+Nesta aula, aprofundaremos nosso entendimento teórico das redes generativas. Exploraremos as nuances das arquiteturas das GANS, VAEs e modelos autorregressivos, discutindo seus fundamentos matemáticos e os algoritmos que as tornam possíveis.
+Além disso, analisaremos estudos de caso e pesquisas recentes que destacam os avanços e desafios atuais no campo das redes generativas, preparando você para uma compreensão avançada dessa tecnologia inovadora.
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+HANDS ON
+Página 4 de 15
+Nessa aula, exploraremos aplicações práticas das redes generativas. Veremos como implementar GANs para criar imagens realistas, utilizaremos VAEs para síntese de dados e investigaremos modelos autorregressivos para geração de texto. Também abordaremos técnicas de treinamento e otimização para melhorar a performance dessas redes.
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+SAIBA MAIS
+Página 5 de 15
+As redes generativas são um campo fascinante e dinâmico dentro da inteligência artificial em que são projetadas para criar novos dados a partir de entradas simples, frequentemente aleatórias. Elas têm possibilitado avanços incríveis em diversas áreas.
+Por exemplo: na criação de imagens realistas, redes generativas podem produzir retratos de pessoas que não existem, cenas de paisagens fictícias e até mesmo obras de arte originais que se assemelham a estilos conhecidos. Na síntese de voz, essas redes são capazes de gerar vozes humanas com diferentes tons e sotaques, permitindo a criação de assistentes virtuais mais naturais e acessíveis.
+Na geração de textos, redes generativas podem escrever artigos, histórias, poesias e até mesmo gerar diálogos para personagens em jogos ou aplicativos de entretenimento.
+Vamos explorar as principais estruturas de redes generativas, compreendendo suas arquiteturas, funcionamento detalhado e aplicações específicas que têm transformado a maneira como interagimos com a tecnologia.
+Redes Generativas Adversariais (GANs)
+As GANs, ou Redes Generativas Adversariais, são um tipo de rede neural que funciona com duas partes: um gerador e um discriminador.
+Com o gerador, esta rede cria dados a partir de entradas aleatórias. Imagine que o gerador é um artista que tenta criar pinturas tão realistas que pareçam fotos reais.
+Ele começa com um vetor de ruído (um conjunto de números aleatórios) e o transforma em um dado, como uma imagem. Inicialmente, as imagens geradas podem parecer distorcidas e irreconhecíveis, mas, com tempo e treinamento, elas se tornam mais realistas.
+Já com o discriminador, esta rede verifica se os dados são reais ou gerados. Pense no discriminador como um crítico de arte que tenta distinguir entre as pinturas reais e as falsas. Ele recebe tanto as imagens reais quanto as imagens geradas e
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+Página 6 de 15
+tenta identificar quais são quais. O discriminador é treinado para maximizar sua precisão em identificar as imagens falsas.
+?
+GERQUITE
+Figura 1 - Redes Generativas Adversariais (GANs) Fonte: Elaborado pelo autor a partir de Inteligência Artificial (2024)
+Durante o treinamento, o gerador tenta enganar o discriminador com dados falsos e o discriminador tenta melhorar sua capacidade de identificar esses dados. Este processo continua até que o gerador crie dados que são quase indistinguíveis dos dados reais. Este processo é um jogo de soma zero, em que o sucesso do gerador implica no fracasso do discriminador e vice-versa.
+Aplicações das GANs:
+• Geração de Imagens Realistas: as GANs podem criar imagens com alta qualidade de pessoas, paisagens, objetos e até mesmo obras de arte que não existem no mundo real.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+Página 7 de 15
+• Aumento de Resolução de Imagens: usando GANs, é possível aumentar a resolução de imagens de baixa qualidade, uma técnica conhecida como "super-resolução".
+• Geração de Música: as GANs podem ser utilizadas para criar composições musicais que seguem estilos específicos ou combinam vários estilos.
+• Geração de Arte: artistas e designers podem usar GANs para criar obras de arte digital inovadoras e inspiradoras.
+Variational Autoencoders (VAEs)
+Os VAEs, ou Autoencoders Variacionais, são outro tipo de rede generativa. Eles funcionam de maneira um pouco diferente.
+Com relação ao Encoder, esta parte da rede transforma os dados de entrada (como uma imagem) em uma representação compacta e codificada. Pense no encoder como um artista que cria um esboço simplificado de uma pintura. Ele mapeia os dados de entrada para uma distribuição latente, em que cada ponto da distribuição representa uma possível variação do dado original.
+Já com relação ao Decoder, esta rede reconstrói os dados a partir da representação compacta criada pelo encoder. O decoder é como um artista que pega o esboço e o transforma de volta em uma pintura detalhada. Ele tenta recriar os dados originais a partir da distribuição latente, gerando dados que sejam o mais próximos possível dos dados reais.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+Página 8 de 15
+Figura 2 - Variational Autoencoders (VAEs) Fonte: Elaborado pelo autor a partir de Inteligência Artificial (2024)
+Os VAEs não apenas comprimem e descomprimem dados, mas também garantem que a representação compacta siga uma distribuição normal (como uma curva de sino). Isso permite que o VAE gere novos dados ao amostrar essa distribuição. Durante o treinamento, ele minimiza a diferença entre os dados reais e os dados reconstruídos, além de regularizar a distribuição latente para garantir que haja uma distribuição normal.
+Aplicações dos VAEs:
+• Geração de Imagens: VAEs podem criar novas imagens que são variações dos dados de entrada originais. Por exemplo: podem gerar novos rostos a partir de um conjunto de rostos existentes.
+• Síntese de Voz: os VAEs podem ser usados para criar novas vozes ou sintetizar a fala com base em exemplos de fala existentes.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+Página 9 de 15
+•
+Processamento de Linguagem Natural: em NLP, VAEs podem gerar novos textos ou frases que seguem o estilo e o contexto dos dados de treinamento.
+Recurrent Neural Networks (RNNs) e Long Short-Term Memory (LSTM) Networks As RNNs e LSTMs são redes neurais projetadas para lidar com dados sequenciais, como texto ou música.
+Sobre as RNNS, estas redes têm loops internos que permitem manter informações sobre os dados anteriores em uma sequência. Imagine uma RNN como uma pessoa que lê uma frase palavra por palavra, lembrando-se de cada palavra enquanto lê. Cada passo de tempo na RNN processa uma parte da sequência e passa uma "memória" para o próximo passo, permitindo que a rede entenda o contexto da sequência inteira.
+Já LSTMs são uma variação das RNNs projetadas para lembrar informações por longos períodos. Elas são como RNNs, mas com uma memória melhorada que evita esquecer palavras importantes no meio de uma frase longa. LSTMs possuem "gates" especiais que controlam o fluxo de informações, decidindo o que manter e o que esquecer, permitindo que a rede lide melhor com dependências de longo prazo.
+Aplicações das RNNs e LSTMs:
+Geração de Texto: RNNs e LSTMs podem ser usadas para completar frases, gerar parágrafos inteiros ou até mesmo escrever histórias, poesias e artigos.
+• Composição de Música: essas redes podem compor música nota por nota, gerando novas melodias que seguem um estilo específico.
+• Análise de Séries Temporais: em finanças, RNNs e LSTMs são usadas para prever preços de ações e analisar tendências de mercado, levando em conta dados históricos para prever movimentos futuros.
+Modelos Baseados em Fluxos (Flow-based Models)
+Os modelos baseados em fluxos usam uma série de transformações que podem ser invertidas para mapear dados complexos para uma distribuição simples e vice-versa.
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+Página 10 de 15
+Temos a invertibilidade, em que cada transformação na rede pode ser revertida, permitindo tanto a geração de novos dados quanto a verificação da probabilidade dos dados gerados. Isso significa que podemos mapear um dado complexo para uma forma simples (como números aleatórios) e depois voltar para a forma complexa original.
+Sobre a densidade explícita, esses modelos fornecem a probabilidade exata dos dados gerados, o que é útil para várias aplicações probabilísticas. Eles calculam diretamente a densidade dos dados, permitindo uma melhor interpretação e manipulação dos dados gerados.
+Aplicações dos Modelos Baseados em Fluxos:
+• Geração de Imagens: modelos como o Glow podem gerar imagens de alta qualidade e são particularmente bons em capturar detalhes finos.
+• Modelagem de Distribuições Complexas: esses modelos são usados em situações nas quais é importante ter um controle preciso sobre a distribuição dos dados, como em geração de amostras para simulações físicas ou científicas.
+Modelos Autorregressivos
+Os modelos autorregressivos geram dados sequencialmente, um elemento de cada vez, condicionados nos elementos gerados anteriormente.
+Uma de suas características diz respeito a PixelRNN/PixelCNN, em que esses modelos geram imagens pixel por pixel, levando em conta os pixels anteriores para criar cada pixel. Imagine um artista pintando uma imagem ponto a ponto, considerando cada ponto anterior para decidir a cor e a posição do próximo ponto. Cada pixel é gerado com base nos pixels que já foram gerados, garantindo coerência na imagem final.
+Aplicações dos Modelos Autorregressivos:
+• Geração de Imagens de Alta Qualidade: esses modelos são conhecidos por sua capacidade de gerar imagens detalhadas e coerentes, sendo usados em diversas aplicações de visão computacional, como restauração de imagens e preenchimento de partes faltantes em fotos.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+Página 11 de 15
+• Visão Computacional: em áreas como reconhecimento de padrões e análise de imagens, esses modelos ajudam a melhorar a qualidade ea precisão dos resultados.
+FIA
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+O QUE VOCÊ VIU NESTA AULA?
+Página 12 de 15
+Nesta aula, você aprendeu sobre as estruturas de redes generativas, um campo inovador dentro da inteligência artificial. Exploramos como essas redes são capazes de criar novos dados, como imagens realistas, vozes sintéticas e textos coerentes, a partir de entradas simples. Entendemos como as Redes Generativas Adversariais (GANs) utilizam um gerador e um discriminador em um jogo de soma zero para produzir dados altamente realistas.
+Também abordamos os Autoencoders Variacionais (VAEs), que comprimem e descomprimem dados para gerar novas amostras, e os Modelos Autorregressivos, que geram dados sequencialmente com base em elementos anteriores. Ao final, discutimos como essas tecnologias têm aplicações práticas em diversas áreas, transformando a maneira como criamos e interagimos com a informação digital.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+Página 13 de 15
+REFERÊNCIAS
+AWS. O que é uma GAN? 2023. Disponível em: <https://aws.amazon.com/pt/what- is/gan/>. Acesso em: 30 jul. 2024.
+LAITZ, T. S. Estudo e Aplicação de Redes Neurais Generativas. 2021. Disponível em: <https://www.prp.unicamp.br/inscricao- congresso/resumos/2021P18446A36078O4856.pdf>. Acesso em: 30 jul. 2024.
+WOLFE, C. R. Language Model Training and Inference: From Concept to Code 2023. Disponível em: <https://cameronrwolfe.substack.com/p/language-model- training-and-inference>. Acesso em: 30 jul. 2024.
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Estruturas de Redes Generativas
+PALAVRAS-CHAVE
+GAN. VAE`s. Redes Generativas.
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Página 14 de 15
+POS TECH
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com

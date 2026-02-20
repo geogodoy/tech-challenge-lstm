@@ -1,0 +1,195 @@
+Guia da fonte
+Este material didático explora os fundamentos e a evolução da interpretação de imagens no contexto da engenharia de machine learning, utilizando o exemplo de carros autônomos para ilustrar a complexidade da visão computacional. O texto detalha uma hierarquia de processamento que se inicia na extração de características, como bordas e texturas, evoluindo para a detecção de objetos, a classificação de imagens e a segmentação semântica de pixels. Para contextualizar o progresso da área, a aula analisa marcos históricos em bases de dados como MNIST, CIFAR-10 e ImageNet, destacando como o uso de redes neurais profundas e o processamento em paralelo permitiram saltos de precisão. Por fim, o conteúdo enfatiza a eficiência de arquiteturas modernas, como o modelo YOLO, que integra múltiplas tarefas de visão em uma única operação em tempo real.
+
+
+
+
+
+
+POS TECH
+MACHINE LEARNING ENGINEERING
+FASE 4| AULA 03 -
+INTERPRETAÇÃO DE
+IMAGENS
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Interpretação de Imagens
+O QUE VEM POR AÍ?
+.3
+HANDS ON
+4
+SAIBA MAIS
+5
+O QUE VOCÊ VIU NESTA AULA?
+13
+REFERÊNCIAS
+14
+SUMÁRIO
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Página 2 de 16
+Interpretação de Imagens
+O QUE VEM POR AÍ?
+Página 3 de 16
+Quando falamos de um carro autônomo, por exemplo, como você imagina que é o funcionamento da inteligência necessária para fazer com que ele ande pelas ruas? A verdade é que a solução é complexa e envolve a interação de diversos sensores. A visão computacional pode ser só um braço da solução, mas é extremamente importante, pois tem o objetivo de explicar o que está sendo visto pelo sistema.
+Por exemplo: o objeto na frente do carro é outro carro? Ele está se movendo na mesma direção que este? Ele está se movendo mais rápido? O objeto é uma pessoa? Ela vai ter tempo para atravessar a rua? Existe algo que possa estar obstruindo a visão? É algo que gera perigo para o carro?
+Para todas as perguntas a solução é a mesma: interpretação da imagem. Nesta aula, vamos entender melhor quais são os problemas dessa ferramenta.
+FIA
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Interpretação de Imagens
+HANDS ON
+Página 4 de 16
+Nesta aula vamos ver os principais problemas de visão computacional. Em seguida, daremos uma olhada em datasets usados para benchmark (um teste comparativo) de modelos e, finalmente, teceremos um comentário rápido sobre um dos modelos mais bem sucedidos do mercado atualmente.
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Interpretação de Imagens
+SAIBA MAIS
+Página 5 de 16
+Até aqui já abordamos como as imagens são representadas do ponto de vista dos computadores. Depois, vimos como explorar essas representações para extrair informações dessas imagens e até um método muito conhecido para localização de objetos nas imagens. Mas para usar esses métodos é necessário ter ambientes extremamente controlados, além da dificuldade para se extrapolar os modelos para novas situações. Agora, trataremos da interpretação de imagem.
+A interpretação de uma imagem é feita em estágios. Alguns deles são mais gerais, outros mais específicos para os problemas em que a visão computacional está sendo aplicada.
+Primeiro, na base de tudo, está a extração de características, que consiste em determinar nas imagens as bordas, formas, texturas e padrões. Estes serão usados como insumos para os demais estágios. Um exemplo de como isso pode ser feito foi apresentado na aula anterior: a ideia do classificador em cascata de características de Haar faz exatamente isso. Níveis mais baixos do classificador extraem características mais simples que são passadas para filtros superiores e assim sucessivamente até o filtro que representa um objeto.
+Figura 1 Características de Haar sobre a imagem Fonte: Bukis et al. (2011)
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Interpretação de Imagens
+Página 6 de 16
+O mesmo pode ser visto na arquitetura de redes neurais, representado pelas camadas convolucionais, que basicamente extraem características das imagens e constroem uma nova imagem que é uma abstração da original. Por sua vez, ela pode ser usada por uma nova camada convolucional para criar outra imagem de um nível superior de abstração, até que você use uma rede neural densa para extrair alguma informação da imagem abstraída.
+Acima da extração de características podemos colocar uma detecção de objetos, ou localização de objetos, como fizemos na última aula. A detecção de objetos é uma tarefa que pode ser tão simples quanto encontrar o rosto de uma pessoa em uma imagem ou tão difícil quanto encontrar vários objetos ao mesmo tempo em uma imagem obtida em movimento, em tempo real, com risco à vida em caso de erro, como seria o caso do carro autônomo.
+Radius of Left Curvature: 505 m Radius of Right Curvature: 444 m Distance from Lane Center: -0.20 m
+Figura22 - Visão computacional de carro autônomo Fonte: Farag; Aly (2023)
+Outra camada possível é a classificação de uma imagem, que pode ser vista como um nível acima da detecção de objetos. Classificar uma imagem consiste em determinar se essa imagem é, ou não, parte de um grupo pré-definido de imagens. É possível considerar que a classificação é um estágio superior à detecção de objetos, pois dependendo dos objetos vistos você pode inferir o que seria a imagem.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Interpretação de Imagens
+Página 7 de 16
+Por exemplo: se você detectar uma cama na imagem, muito provavelmente é uma imagem de um quarto; por outro lado, detectar um fogão induz concluir que é a imagem de uma cozinha.
+dogs
+cats
+birds
+PASCAL
+ILSVRC
+bird
+flamingo
+cock
+ruffed grouse quail
+partridge
+cat
+Egyptian cat Persian cat Siamese cat
+tabby
+lynx
+dog
+dalmatian keeshond miniature schnauzer standard schnauzer giant schnauzer
+Figura33 - Classificação de Imagens Fonte: Russakovsky et al. (2014)
+Em seguida, temos a segmentação semântica, um processo de classificação que, em vez de classificar a imagem, classifica cada pixel individualmente como pertencente a classes específicas. Similar ao que foi feito com a segmentação de cores, é possível segmentar toda uma seção da imagem e em seguida aplicar uma máscara sobre ela. Um bom exemplo de uso é aplicar um filtro para remover o fundo de uma imagem enquanto preserva um objeto de interesse no centro.
+3
+73
+Figura44 - Segmentação de Imagens Fonte: Guo et al. (2018)
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Interpretação de Imagens
+Página 8 de 16
+Por fim, a classificação de uma imagem em categorias pode ser limitante em alguns casos, por mais que você possa classificar uma mesma imagem em diversas categorias. Por exemplo: uma mesma imagem pode pertencer às classes ponte, inverno e pôr do sol. Mas talvez uma descrição da imagem seria melhor: "uma ponte em um fim de tarde no inverno".
+Essa descrição é um problema generativo multimodal, ou seja, a resposta não é baseada em um modelo de resposta escrito por alguém, e sim criado via modelo de forma probabilística. Ao mesmo tempo, a resposta em texto é gerada a partir de uma imagem, com o direcionamento do que responder gerado por outro texto.
+Figura 5 - Uma ponte em um fim de tarde no inverno Fonte: Elaborado pelo autor (2024)
+Recomendo uma pausa para você pensar um pouco sobre os contatos que teve com visão computacional e quanto tempo faz que você tem visto esse tipo de aplicação. Por exemplo: os QR codes, que estão em todo o lugar agora, são basicamente um reconhecimento de padrão, que é convertido em uma sequência binárias e depois descriptografada em alguma informação, como um link.
+Para conseguirmos entender o quanto a visão computacional tem evoluído, vamos olhar para três datasets importantes da literatura: MNIST, CIFAR-10 е о ImageNet. Vamos analisar as evoluções dos modelos aplicados seguindo as
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Interpretação de Imagens
+Página 9 de 16
+visualizações do site Papers WithCode que reúne diversos resultados obtidos ao longo dos anos.
+O MNIST diz respeito ao problema de identificar números escritos [6,7]. Ele consiste em setenta mil exemplos de dígitos, em imagens monocromáticas quadradas com vinte pixels de lado.
+0000000
+00000
+////////////
+2222222222222222 33333 3 3 3 333333 3 3 4 4 4 4 4 4 4 4 4 4 4 4
+の
+5555555555555555 6666666666666666 77777777777 7 7 7 7 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+9999999999999999
+Figura 6 - Exemplo da base do MNIST Fonte: Researchgate (2024)
+No artigo que deu origem à base, Lecun e colaboradores iniciam com um erro de 12 pontos percentuais, a partir de uma regressão linear. No mesmo artigo, eles atingem 0.7% de erro usando uma LeNet-5, que já iniciava o uso de redes convolucionais para extrair as características das imagens. Nesse meio tempo diversos modelos foram propostos: em 2012, por exemplo, a MCDNN se tornava a então "campeã" ao propor um modelo que atingiu 0.23% de erro.
+Essa mesma topologia de rede neural também obteve um bom resultado na CIFAR-10, 88.8%, o melhor modelo na época. Atualmente, o melhor modelo é o Branching/Merging CNN + Homogeneous Vector Capsules, que atingiu 0.13% de erro no MNIST em 2020. Houve outros modelos que também atingiram bons resultados, mas nenhum superou este.
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Interpretação de Imagens
+Página 10 de 16
+O CIFAR-10 [8] é um conjunto com sessenta mil imagens coloridas quadradas com trinta e dois pixels de lado correspondente à dez classes mutuamente exclusivas diferentes.
+airplane
+automobile
+bird
+cat
+deer
+dog
+frog
+horse
+ship
+truck
+Figura 7 - Exemplos da base do CIFAR-10 Fonte: Krizhevsky et al. (2009)
+O CIFAR-10 foi criado em 2009, onde experimentos iniciais atingiram 64.84% de acurácia usando RBMs. Em 2012, a MCDNN atingiu 88.8% no mesmo dataset. Atualmente, o melhor modelo é o Efficient Adaptive Ensembling, que alcançou 99.6% de acurácia para classificação.
+O ImageNet contém mais de 14 milhões de imagens que foram manualmente anotadas para classificação e detecção de objetos. Ele representa um problema muito maior que os outros dois citados.
+Em 2016, o melhor resultado foi alcançado usando a GoogLeNet, atingindo 68.3%. Nessa época as estruturas que começaram a ser chamadas de redes neurais profundas já eram aplicadas em larga escala; nesse caso, a GoogLeNet possuía 22
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Interpretação de Imagens
+Página 11 de 16
+camadas de profundidade. Outras arquiteturas também alcançaram bons resultados, como por exemplo a MobileNet, de 2017, que atingiu 70.6% de acurácia no ImageNet mas foi pensada para o uso em aparelhos móveis.
+Esse pequeno resumo teve como objetivo evidenciar que a área tem se desenvolvido bastante nos últimos anos. Isso ocorre principalmente pelo advento das placas gráficas, que permitem o processamento em paralelo dos dados. E praticamente tudo é paralelizável em modelos que usam redes neurais como base.
+Um outro bom exemplo é a arquitetura conhecida como YOLO. Essa arquitetura foi proposta em 2016 e faz a detecção de objetos e a classificação da imagem ao mesmo tempo, daí o nome You Only Look Once. Com isso você consegue economizar tempo e dinheiro fazendo a paralelização completa do modelo. Essa arquitetura fez tanto sucesso que atualmente está na décima versão.
+Inicialmente ela consistia em 22 camadas de redes convolucionais, finalizadas com duas camadas densas. A ideia do modelo era dividir a imagem em pequenos quadrados e determinar a classe de cada um deles, que é semelhante à ideia de segmentação semântica, só que em vez de classificar o pixel ele classifica um quadrado. Assim ele consegue encontrar todos os objetos na imagem.
+Em seguida, com essa informação, ele classifica a imagem de acordo com os objetos encontrados. Atualmente essa arquitetura emprega camadas de atenção, popularizadas pelos modelos de linguagem.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Interpretação de Imagens
+boat 0.b
+person 0.97
+Página 12 de 16
+gloss
+tabe 26
+0.91
+frigerator 0.93
+traffic light 0.86
+traffic light 0.87
+traffic light O tetraffic light
+r 0.60
+Figura 8 - Exemplos de funcionamento da YOLOv10 Fonte: Wang et al. (2009)
+Agora é sua vez de dar uma olhada no estado da arte de visão computacional! Entre no site do Papers WithCode e dê uma olhada no Estado da Arte (State-of-the- Art) de áreas do seu interesse, bem como de Visão Computacional. O site está organizado em áreas e tarefas. Dentro de cada divisão ele explica qual o objetivo da tarefa e quais os principais benchmarks e artigos. Lembrando que você sempre pode começar a procurar um survey (um artigo explicando os principais desenvolvimentos da área) sobre o assunto.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Interpretação de Imagens
+O QUE VOCÊ VIU NESTA AULA?
+Página 13 de 16
+Os principais problemas de Visão Computacional são complementares: a extração de características gera insumos para a detecção de objetos, que pode ser vista, à grosso modo, como uma versão simplificada da segmentação semântica, que pode servir de insumo para uma classificação de imagens. Essa integração permite capacidades cada vez maiores de interpretação das imagens.
+Vimos nessa unidade alguns dos diversos datasets usados para comparar os modelos entre si nas diversas tarefas. Vimos também que esses modelos estão em constante evolução, como no caso do YOLO, cuja primeira versão surgiu em 2016 e se encontra em sua décima iteração.
+Na próxima aula vamos estudar uma nova classe de problemas, os modelos
+generativos.
+FIA
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Interpretação de Imagens
+REFERÊNCIAS
+Página 14 de 16
+ALIF, M. A. R.; HUSSAIN, M. YOLOv1 to YOLOv10: A comprehensive review of YOLO variants and their application in the agricultural domain. 2024. Disponível em: <https://doi.org/10.48550/arXiv.2406.10139>. Acesso em: 26 jul. 2024.
+BUKIS, A., et al. Survey of face detection and recognition methods. Proceedings of the International Conference on Electrical and Control Technologies, Kaunas. 2011, . 51-56.
+FARAG, W. A.; ALY, W. H. F. Computer vision-based road vehicle tracking for self- driving car systems. Journal of Southwest Jiaotong University. 2023.
+GUO, Y. et al. A review of semantic segmentation using deep neural networks. International journal of multimedia information retrieval. p. 87-93. 2018.
+KRIZHEVSKY, A. et al. Learning multiple layers of features from tiny images. 2009. Disponível em: <https://www.cs.toronto.edu/~kriz/learning-features-2009- TR.pdf>. Acesso em: 26 jul. 2024.
+LECUN, Y., et al. Gradient-based learning applied to document recognition. 1998. Disponível em: <https://ieeexplore.ieee.org/document/726791>. Acesso em: 26 jul. 2024.
+OPENCV. What is Computer Vision in 2024? A Beginners Guide. 2023. Disponível em: <https://opencv.org/blog/what-is-computer-vision/>. Acesso em: 26 jul. 2024.
+2024.
+RESEARCHGATE. Figura 1. Disponível em: <https://www.researchgate.net/figure/Figura-1-Amostra-da-base-de-dados-MNIST- 10_fig1_342090545>. Acesso em: 26 jul. 2024. RUSSAKOVSKY, O. et al. ImageNet Large Scale Visual Recognition Challenge. 2014. Disponível
+<https://arxiv.org/abs/1409.0575>. Acesso em: 26 jul. 2024.
+em:
+WANG, A. et al. Yolov10: Real-time end-to-end object detection. 2024. Disponível em: <https://doi.org/10.48550/arXiv.2405.14458>. Acesso em: 26 jul. 2024.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Interpretação de Imagens
+PALAVRAS-CHAVE
+Página 15 de 16
+Extração de Características. Detecção de Objetos. Classificação de Imagens. Segmentação Semântica.
+IP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+POS TECH
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com

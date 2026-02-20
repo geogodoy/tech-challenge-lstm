@@ -1,0 +1,251 @@
+Guia da fonte
+
+
+
+POS TECH
+MACHINE LEARNING ENGINEERING
+FASE 4 AULA 05 -
+GENERATIVOS
+MODELOS MULTIMODAIS
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+O QUE VEM POR AÍ?
+.3
+HANDS ON
+4
+SAIBA MAIS
+5
+O QUE VOCÊ VIU NESTA AULA?
+17
+REFERÊNCIAS
+18
+SUMÁRIO
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Página 2 de 20
+Modelos Generativos Multimodais
+O QUE VEM POR AÍ?
+Página 3 de 20
+Como podemos extrair informações mais complexas das imagens? E como podemos guiar o processo de transformação de uma imagem? As respostas são os usos de modelos multimodais. Eles permitem que objetos inicialmente com um domínio sejam traduzidos para um novo domínio completamente diferente, como por exemplo converter uma imagem em texto, o que resolveria o primeiro problema.
+Além de identificar objetos nas imagens, ou dizer o que uma imagem é, um modelo de conversão de imagem em texto seria capaz de descrever a imagem. Essa descrição ainda poderia, por sua vez, ser guiada, a partir de um objetivo. Para o segundo problema, seria necessário converter texto em imagem; dessa forma a geração, ou transformação, de uma imagem poderia ser guiada de a partir de um texto que a descreve.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+HANDS ON
+Página 4 de 20
+Nesta aula vamos falar sobre os modelos multimodais, como são
+implementados e quais os principais problemas dessas tecnologias.
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+SAIBA MAIS
+Página 5 de 20
+Até aqui, vimos desde a criação do dataset e os modelos de interpretação de imagens, até os modelos que transformam essas imagens. Interpretar uma imagem como classes, ou até mesmo apresentar o que existe nela, já é mais do que suficiente para se utilizar os modelos em diversas situações.
+Ao mesmo tempo, transformações das imagens podem ser bem interessantes, mas exigem um complexo processo de se treinar um modelo para aprender um estilo, e isso pode não ser cumulativo com vários estilos diferentes.
+Primeiro, precisamos entender melhor o que significa "multimodal". Isso diz respeito à ideia de que um agente pode usar informações complementares, de diferentes tipos, para realizar uma tarefa, entre eles: imagens, áudio e texto, por exemplo. A vantagem desse modelo sobre os outros é a capacidade de usar os vários tipos de dados para incorporar informações extras sobre o objetivo da tarefa.
+Anteriormente, quando apresentamos as principais tarefas da visão computacional, comentamos brevemente sobre o problema de se descrever uma imagem. A ideia por trás disso vai desde acessibilidade (ao criar um texto explicando a imagem para alguém com necessidades visuais), até adicionar uma camada extra de abstração de uma imagem, podendo usar a descrição para ajudar na classificação, por exemplo.
+010
+Template: "objeto1 sobre objeto2 em local"
+gato sobre mesa em sala de jantar
+Adequação da resposta
+um gato sobre a mesa na sala de jantar
+Extração de objetos
+objeto1: gato objeto2: mesa local: sala de jantar
+Preenchimento
+Figura 1 - Exemplo de descrição de imagem usando um template Fonte: Elaborado pelo autor (2024)
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 6 de 20
+Esse processo é conhecido como "image captioning". Uma das formas de fazer isso é usando textos prontos. Dada uma base de dados com diversos textos prontos, o objetivo do modelo é encontrar qual texto se adequa melhor a imagem que foi apresentada ao modelo. No fim, isso funcionaria em parte como um modelo de classificação ou um modelo de agrupamentos, como por exemplo um KNN.
+Para gerar uma descrição de uma imagem com texto livre é preciso fazer uma combinação de modelos. No geral, esses modelos possuem um Encoder de imagens e um Decoder de texto. O primeiro gera um embedding da imagem, que é uma abstração da imagem. O embedding é usado pelo Decoder de texto para gerar a descrição da imagem.
+Digamos que você já tenha modelos excelentes, que trabalham em domínios diferentes. Um deles foi um daqueles que vimos na aula anterior, que a partir de uma imagem tenta gerar a mesma imagem como saída. O outro é um modelo de linguagem, treinado com o mesmo objetivo: dado um texto, ele tenta reproduzir o mesmo texto de saída.
+Se os dois são baseados em AutoEncoders, é possível só separar o Encoder do modelo de imagens e o Decoder do modelo de texto. O problema é que o Encoder de imagem sabe gerar um embedding de abstração da imagem, necessário para reconstruir a imagem, enquanto o Decoder de texto foi criado para reconstruir um texto a partir de um embedding de texto. A resposta de um não se comunica com a entrada do outro. Muito provavelmente, nem os vetores possuem a mesma dimensão.
+Encoder de Imagem
+Camada de conversão
+Decoder de Texto
+Ponte conectando montes, com oceano ao fundo
+Figura 2 - Encoder de imagem e Decoder de texto Fonte: Elaborado pelo autor (2024)
+O que se faz nesse caso é congelar o Encoder de imagens e o Decoder de texto, para que eles não mudem com o treino, e entre os dois modelos adicionar camadas densas para fazer a tradução de um domínio para o seguinte. Isso reduz
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 7 de 20
+muito o tempo de treino, pois em vez de treinarmos novamente dois modelos especializados enormes, podendo ainda fazer o modelo perder conhecimento, podemos nos concentrar em treinar um adaptador muito menor e com total liberdade de arquitetura.
+O problema que retorna novamente é a base de treino. Esse tipo de dado, uma descrição de uma imagem, é um dado caro. Pior que isso, é um dado subjetivo no sentido de:
+• Qual a ordem em que eu devo descrever as coisas?
+• O que é mais importante em uma imagem, o que vale apena adicionar à descrição?
+• Eu entendi a imagem? Eu tenho o conhecimento prévio necessário para descrever essa imagem?
+• Os termos que eu estou usando para descrever essa imagem são coerentes com o tipo de aplicação em que esse modelo será usado?
+Além disso, é impossível determinar se uma anotação está correta se não houver uma interação com uma segunda ou terceira pessoa para validar essa anotação. Por isso, é comum que bases de benchmark tenham, para cada imagem, múltiplas descrições. Por exemplo: MSCOCO possui cinco descrições para cada imagem. Espera-se que, na média, as descrições estejam certas.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 8 de 20
+Bottle
+Sofa
+Train Car Chair Motorbike
+Dog Cow
+Person
+매
+Figura 3 - Exemplos da base MSCOCO Fonte: Lin, et al. (2014) [5]
+Um primeiro exemplo de modelo para descrição de imagens é o Show and Tell, que consiste em um extrator de características, para processar, seguido de um gerador de textos baseado em LSTMs. Os autores afirmam que o modelo de imagens passou por um pré-treinamento em uma base da ImageNet, que vimos anteriormente. Eles também explicam o motivo de terem treinado um modelo próprio de linguagem.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 9 de 20
+Vision Deep CNN
+Language Generating
+RNN
+A group of people shopping at an outdoor market.
+8
+There are many vegetables at the fruit stand.
+Figura 4 - Arquitetura do Show and Tell Fonte: Vinyals, et al. (2015) [3]
+A evolução natural foi adicionar mecanismos de atenção ao modelo. O Show, Attend and Tell usa o mecanismo de atenção para identificar as correlações espaciais das estruturas e indicar quais os pontos relevantes nas imagens para cada palavra gerada. Isso funciona um pouco como o processo de detecção de objetos, em que primeiro ele detecta quais são os objetos de importância na imagem e depois usa essas relações entre eles para gerar uma descrição guiada.
+STOP
+STOP
+A dog is standing on a hardwood floor.
+A stop sign is on a road with a mountain in the background.
+A group of people sitting on a boat in the water.
+A giraffe standing in a forest with trees in the background.
+Figura 5 - Funcionamento do Show, Attend and Tell Fonte: Xu et al. (2015)
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 10 de 20
+Iniciamos essa seção comentando sobre modelos baseados em respostas padrões, ou templates. Esse tipo de modelo tem uma vantagem natural sobre aqueles cujo texto é gerado por um modelo: você garante sua validade conceitual e ética. Quando você usa um modelo generativo para gerar o texto a preocupação com as possíveis alucinações deve ser grande, principalmente se isso representa um risco de imagem para o time.
+No caso dos templates uma resposta errada é gritante, o que torna o processo de validação da resposta algo rápido, inclusive o processo de correção. No caso da resposta generativa, essa verificação não é tão direta tendo em vista que a descrição pode estar quase certa, talvez uma preposição ou outra saiu errada. Mas isso já seria o bastante para o modelo criar uma descrição que muda completamente a interpretação da imagem.
+Além disso, os templates também forçam o estilo de linguagem desejada para a aplicação. Por outro lado, a resposta generativa consegue fornecer uma resposta muito mais rica e adaptada à tarefa, o que torna a aplicação muito mais versátil e dá uma qualidade maior para a resposta também.
+Agora que apresentamos os principais conceitos de modelos de descrição de texto, quero que você separe um tempo para analisar as aplicações a seguir. Determine o que seria melhor usar, um modelo baseado em templates ou um modelo generativo. Leve em consideração as implicações éticas e as responsabilidades que o modelo precisa ter.
+Além disso, você também deve determinar o procedimento ideal para a criação de um dataset. Lembre-se de indicar o quão difícil seria conseguir as anotações. Finalmente, veja como uma curadoria dos dados pode ser feita, quem deveria ser responsável por analisar os dados para entender se ainda são válidos ou se o modelo tem respondido da forma correta.
+• Geração de áudiodescrição para séries e filmes.
+• Geração de laudos automáticos para exames de ultrassonografia.
+• Descrição das imagens em galerias pessoais, para organização.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 11 de 20
+O método de se converter uma imagem em texto foi apresentado, mas acreditamos que seria muito mais divertido fazer o processo contrário: gerar uma imagem a partir de um texto.
+Inicialmente, pode-se usar o mesmo procedimento apresentado anteriormente: dado um Encoder de texto e um Decoder de imagem e então adicionar uma camada de conversão entre os modelos ou treinar o modelo todo. Esse processo não é muito usual, pois devido ao problema de "super-ajuste" do AutoEncoder de imagens é muito provável que o modelo acabe retornando exemplos de treino sem a variância desejada, sendo a variância interpretada como o poder de criação do modelo.
+This flower has small, round violet petals with a dark purple center
+$\hat{x}:=G(z,\varphi(t))$
+$\varphi(t)$
+This flower has small, round violet petals with a dark purple center
+امام
+$z\sim\mathcal{N}(0,1)$
+$D(\hat{x},\varphi(t))$
+Generator Network
+Discriminator Network
+Figura 6 - Arquitetura de uma GAN, para gerar imagens a partir de texto Fonte: Reed et al. (2016)
+Uma forma de contornar isso é usar um mecanismo de atenção e empregar isso para fazer a geração das imagens. Nesse processo, em vez de se tentar gerar a imagem de uma única vez, essa categoria de modelos faz isso por partes, geralmente efetuando um processo de construção iterativa da imagem.
+Dependendo do que foi gerado em uma etapa anterior do modelo, um modelo discriminante aponta na imagem o que está discrepante entre o que foi requisitado em texto e o que foi gerado na imagem. Ainda assim existem limitações dos resultados, por haver proximidade de imagens do conjunto de treinamento.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 12 de 20
+this bird is red with white and has a very short beak
+10:short 3:red
+11:beak
+9:very
+8:a
+3:red
+5:white
+1:bird
+10:short
+0:this
+Figura 7 - Exemplo de funcionamento de um modelo adversarial com mecanismo de atenção Fonte: Xu et al. (2018)
+Para evitar os problemas de "super-ajuste" e permitir que o modelo seja mais "criativo", nasceu a ideia do modelo de difusão. O processo é simples: o modelo possui um Encoder de texto, usado para converter o texto com a descrição da imagem desejada em um embedding. Em paralelo, um modelo é treinado com o objetivo de remover ruídos baseado no objetivo descrito.
+Dessa forma, uma imagem com algum ruído é apresentada ao modelo e ele deve reduzir a quantidade de ruído de forma que a imagem gerada esteja mais de acordo com o objetivo. Mas como isso gera uma imagem?
+Para gerar uma nova imagem, o método cria uma inicial a partir de ruído branco. Então o modelo remove parte desse ruído, de acordo com a descrição objetivo, o que resulta em uma imagem um pouco menos ruidosa. A imagem gerada é apresentada
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 13 de 20
+ao modelo, que realiza esse processo novamente. A cada repetição do processo, a imagem gerada pelo modelo vai se tornando mais nítida, mais próxima da descrição.
+Esse processo iterativo gera imagens melhores, pois ele não depende apenas do conjunto de treino, mas também da aleatoriedade inicial do ruído branco. Mas comparado aos métodos que usam um Decoder de imagem, o método de difusão é demorado. Isso porque ele gera diversas imagens intermediárias para chegar na versão final da imagem.
+image
+Predicted noise
+1
+Step 2
+3
+4
+Figura 8 - Funcionamento do método de difusão Fonte: Stable Diffusion Art (2024)
+Para tentar reduzir o tempo de criação de imagens sem perder a qualidade daquelas geradas, propõe-se o uso da arquitetura adversarial para forçar o modelo de difusão a aprender a remover ruídos em menos passos. Para tanto, uma arquitetura com três modelos é proposta, sendo que ela possui um modelo professor, um aluno e um discriminante.
+O aluno é um modelo de difusão que gera as imagens a partir da remoção de ruídos, guiado por textos. O modelo discriminante julga se a imagem do aluno parece real ou não. E o professor, que também é um modelo de difusão, deve apresentar ao aluno uma imagem em estágio mais avançado. O objetivo da arquitetura é que o aluno execute apenas um passo de remoção do ruído da imagem, o discriminante classifique aquela imagem e o professor execute um segundo passo de remoção de ruído da imagem, gerando uma nova.
+Com isso, o aluno é treinado para gerar uma imagem que engane o modelo discriminante e seja mais próximo da imagem gerada pelo professor. Isso faz o modelo
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 14 de 20
+pular etapas, extraindo mais ruído da imagem, ao mesmo tempo em que tenta manter
+uma estrutura lógica que engane o discriminante.
+$s\in T_{student}=\{\tau_{1},...\tau_{n}\}$ $t\in T_{teacher}=\{1,...1000\}$ $;\epsilon^{\prime}\sim\mathcal{N}(0,[I])$
+$d(x,y)$ distance metric e.g. $||x-y||_{2}^{2}$
+adversarial loss
+forward diffusion process
+θ
+real /fake
+Discriminator
+distillation loss
+$x_{s}=\alpha_{s}x_{0}+\sigma_{s}\epsilon$ ADD-student
+$\hat{x}_{\theta}(x_{s},s)$
+$c(t)d(\hat{x}_{\theta},\hat{x}_{\psi})$
+stop grad
+→
+ψ
+$\hat{x}_{\theta,t}=\alpha_{t}\hat{x}_{\theta}+\sigma_{t}\epsilon^{\prime}$ DM-teacher
+$\hat{x}_{\psi}(\hat{x}_{\theta,t},t)$
+Figura 9 - Arquitetura da difusão adversarial Fonte: Sauer et al. (2023)
+Da mesma forma que os modelos de conversão da imagem em texto geram questionamentos éticos, isso também ocorre com esses modelos. Essa discussão vem ganhando força com relação a privacidade, plágio, geração de informações falsas e vieses dos modelos, entre outras coisas.
+O maior problema para se alcançar um modelo generativo que seja bom o suficiente para conseguir compor uma imagem de acordo com o texto é o Dataset. De onde essas imagens estão vindo, qual a distribuição delas, qual a qualidade das imagens e suas anotações e qual sua legalidade, considerando tanto seu conteúdo quanto suas permissões de uso, são problemas para o Dataset dessas aplicações, os quais influenciam diretamente a qualidade das respostas do modelo após o treino.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 15 de 20
+Mas o ponto central de discussão é sobre as responsabilidades com relação aos modelos. No fim, qualquer modelo de IA é uma ferramenta. O problema de Dataset responde por boa parte dos questionamentos e é de responsabilidade da equipe que treina o modelo.
+No entanto, com relação aos usos da tecnologia, se isso deveria ser aberto ou não, quais são as coberturas de segurança e até mesmo quem deveria ser responsabilizado pelo mau uso da ferramenta são questionamentos que fazem parte de uma discussão mais complexa. Para simplificar um pouco, vou voltar no exemplo do carro autônomo, por ser mais simples e por ter menos envolvidos.
+Imagine a situação em que um carro autônomo cause um acidente. A discussão da responsabilidade fica entre quem seria o culpado: o dono do carro, por permitir o seu comportamento autônomo, ou o fabricante, que fez o carro e o sistema de direção autônoma? Note que seria diferente caso o carro autônomo estivesse envolvido passivamente em um acidente.
+Você pode pensar que a resposta certa seria o fabricante ser o culpado, que por sua vez pode alegar que o sistema possui alertas de problemas e esses alertas são indicadores para que o humano tome alguma ação.
+Por outro lado, se a resposta for que o dono do carro é o culpado, ele pode alegar que o carro é vendido com a premissa de ser autônomo e que essa mudança de responsabilidade, na qual em caso de problemas o humano deveria assumir o controle, é uma forma de o fabricante transferir a culpa para o usuário.
+Olhando novamente para modelos generativos, há vários agentes envolvidos no processo: quem organiza os dados e treina o modelo, quem faz a curadoria do modelo ao longo de sua vida útil, quem distribui esses modelos, quem usa o modelo e quem consome o que é feito com o modelo. Pode-se agrupar os agentes de diversas formas, mas a questão é a mesma: quem é o responsável pelo que foi gerado pelo modelo?
+Quem treina, por não ter feito o dever de casa de verificar se a base de dados está aderente às normas para evitar uma resposta adversa do modelo; quem faz a curadoria do modelo, que deveria entender os casos de bordas do modelo, bem como seus vieses e suas dificuldades; quem distribui o modelo, por não reforçar a necessidade de se adequar o modelo aos preceitos éticos, ou não regulamentar o uso
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 16 de 20
+da ferramenta para impedir o seu mau uso; quem usa o modelo é responsável pelos resultados que ele obtém e se isso resulta em plágio, o usuário é o responsável; ou quem consome o conteúdo que deveria ser responsável por filtrar e denunciar o mau uso da ferramenta?
+A discussão é longa, as respostas não são simples e a regulamentação na área é esparsa e conflitante.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 17 de 20
+O QUE VOCÊ VIU NESTA AULA?
+Nesta aula vimos os modelos de visão computacional multimodais. Comentamos principalmente sobre os que transformam imagens em textos e textos em imagens. Mas também poderíamos adicionar informações de áudio à mistura.
+Além disso, poderíamos usar dados estruturados na mistura, como altitude, data e hora ou outros elementos que poderiam influenciar os resultados dos modelos.
+Outra coisa que vimos é que, pela natureza multimodal do problema, os modelos geralmente são compostos por outros modelos, que agem em conjunto para melhorar a qualidade das respostas.
+FIA
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+Página 18 de 20
+REFERÊNCIAS
+DHARIWAL, P., Nichol, A. Diffusion models beat GANs on image synthesis. Advances in neural information processing systems, v. 34, 2021, p. 8780-8794.
+HOSSAIN, Z., et al. A comprehensive survey of deep learning for image captioning. ACM Computing Surveys (CsUR), v. 51, n. 6, 2019, p. 1-36.
+LIN, T.Y. et al. Microsoft coco: Common objects in context. Computer Vision-ECCV 2014: 13th European Conference, Zurich, Switzerland, September 6-12, 2014, Proceedings, Part V 13. Springer International Publishing. p. 740-755. 2014.
+REED, S. et al. Generative adversarial text to image synthesis. International conference on machine learning. PMLR. p. 1060-1069. 2016.
+SAUER, A., et al. Adversarial diffusion distillation. arXiv preprint arXiv:2311.17042. 2023.
+STABLE DIFFUSION ART. How does Stable Diffusion work? 2024. Disponível em: <https://stable-diffusion-art.com/how-stable-diffusion-work/>. Acesso em: 26 jul. 2024.
+TURK, M. Multimodal interaction: A review. Pattern recognition letters. 36, p. 189- 195. 2014.
+VINYALS, O., et al. Show and tell: A neural image caption generator. Proceedings of the IEEE conference on computer vision and pattern recognition. p. 3156-3164. 2015.
+XU, K. et al. Show, attend and tell: Neural image caption generation with visual attention. International conference on machine learning. PMLR. p. 2048-2057. 2015.
+XU, T. et al. Attngan: Fine-grained text to image generation with attentional generative adversarial networks. Proceedings of the IEEE conference on computer vision and pattern recognition. p. 1316-1324. 2018.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Modelos Generativos Multimodais
+PALAVRAS-CHAVE
+Modelos Heterogêneos. Multimodais. Difusão.
+FIA
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Página 19 de 20
+POS TECH
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com

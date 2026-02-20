@@ -1,0 +1,751 @@
+Guia da fonte
+Esta fonte consiste em um material educacional focado no Reconhecimento de Entidades Nomeadas (NER), uma técnica de Processamento de Linguagem Natural voltada para a identificação e categorização de termos específicos, como nomes de pessoas, locais e organizações. O texto detalha desde conceitos teóricos, como a marcação no formato Inside-Outside-Beginning (IOB), até a aplicação prática utilizando bibliotecas como NLTK, SpaCy e modelos baseados em BERT. Um ponto central da aula é o treinamento de modelos multilíngues com o XLM-RoBERTa, demonstrando como a transferência de conhecimento entre idiomas de uma mesma família linguística pode otimizar a performance. O objetivo final é capacitar o aluno a transformar textos caóticos em conhecimento estruturado, permitindo o desenvolvimento de assistentes virtuais e motores de busca mais inteligentes.
+
+MACHINE LEARNING ENGINEERING
+FASE 4 AULA 05 -
+EXTRAÇÃO DE ENTIDADES
+POS TECH
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+O QUE VEM POR AÍ?
+HANDS ON
+SAIBA MAIS
+O QUE VOCÊ VIU NESTA AULA? REFERÊNCIAS.
+SUMÁRIO
+Página 2 de 24
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+3
+4
+5
+.21
+.22
+Extração de Entidades
+O QUE VEM POR AÍ?
+Página 3 de 24
+Imagine um mundo em que máquinas podem facilmente vasculhar vastas quantidades de texto, identificando nomes, lugares e organizações, transformando o caos em um conhecimento estruturado. Esta é a magia do Reconhecimento de Entidades Nomeadas (NER).
+Essa é a base de sistemas inteligentes que entendem nossa linguagem, possibilitando desde aplicações como assistentes virtuais até motores de busca inteligentes, transformando o modo como interagimos com a tecnologia. Vamos mergulhar no fascinante mundo do NER, em que a linguagem encontra a inteligência das máquinas.
+FIA
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+HANDS ON
+Página 4 de 24
+Muitas vezes precisamos extrair do texto alguma informação específica, seja para responder alguma pergunta sobre os dados, estruturar o banco de dados ou para procurar dados que enriqueçam os que já temos.
+Assim, a tarefa de Reconhecimento de Entidades Nomeadas (NER) visa identificar, dentro do texto, entidades como pessoas, organizações ou locais e outros.
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+SAIBA MAIS
+Página 5 de 24
+Modelos de Reconhecimento de Entidades Nomeadas visam extrair do texto informações categorizadas como:
+• Pessoa (PER): nome de pessoas.
+•
+Organização (ORG): empresas e instituições.
+• Localização (LOC): cidades, países, regiões geográficas.
+•
+Miscellaneous (MISC): outros, o que não for das categorias acima, mas ainda assim for importante, como evento ou produtos.
+Da mesma forma que na análise de sentimento, os modelos de reconhecimento de entidade nomeada também são de classificação, em que cada token possui uma tag e a tarefa do modelo é prever aquela tag.
+O exemplo a seguir mostra como seria taguear utilizando o formato Inside- Outside-Beginning (IOB) para ser usado no treinamento de um modelo NER:
+• B- (Beginning): marca o início de uma entidade.
+• I- (Inside): marca o token de dentro da entidade, contínuo ao anterior.
+• O- (Outside): marca um token que não faz parte de nenhuma entidade nomeada.
+Exemplo:
+Para a sentença "Barack Obama nasceu em Honolulu":
+• Barack -> B-PER (Início da entidade de Pessoa)
+• Obama -> I-PER (Dentro da entidade de Pessoa)
+• nasceu -> O (Fora de qualquer entidade)
+• em -> O
+• Honolulu -> B-LOC (Início da entidade de Local)
+Nesse formato, o modelo tem todas as informações para distinguir de forma
+clara quando uma entidade nomeada começa e quando termina.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Página 6 de 24
+Algumas bibliotecas possuem modelos pré-treinados nessa tarefa que você
+pode usar: a NLTK possui um modelo primariamente treinado em inglês; já a SpaCy possui o modelo 'pt_core_news_sm' que é treinado na língua portuguesa.
+NLTK
+pip install nltk
+import nltk
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
+from nltk import pos_tag, ne chunk
+from nltk.tokenize import word_tokenize
+texto = "Barack Obama nasceu em Honolulu, Havaí. Ele foi o
+44° presidente dos Estados Unidos."
+tokens = word tokenize (texto)
+taggeado = pos_tag(tokens)
+entidades = ne_chunk(taggeado) print (entidades)
+Saída:
+(S
+(PERSON Barack/NNP)
+(PERSON Obama/NNP)
+nasceu/MD
+em/VB
+(GPE Honolulu/NNP)
+,/,
+(PERSON Havaí/NNP) ./.
+(PERSON Ele/NNP)
+foi/VBD
+o/JJ
+44°/CD
+presidente/NN
+dos/NNS
+(PERSON Estados/NNP Unidos/NNP) ./.)
+Mesmo com o modelo do NLTK tendo sido pré-treinado na língua inglesa, conseguimos transferir o conhecimento e usá-lo na língua portuguesa, ainda que os resultados possam não ser tão bons quanto treinarmos na língua específica. Assim, podemos ver que:
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Extração de Entidades
+Página 7 de 24
+• A entidade Barack Obama como pessoa está correta, classificado como PERSON.
+• A entidade Honolulu foi classificada corretamente, GPE é o mesmo que local.
+As demais entidades foram classificadas erroneamente, mas este já é um começo.
+E se tentássemos em inglês? Mudando o texto para "Barack Obama was born in Honolulu, Hawaii. He was the $44^{\circ}$ president of the United States.", temos o seguinte resultado:
+(S
+(PERSON Barack/NNP)
+(PERSON Obama/NNP)
+was/VBD
+born/VBN
+in/IN
+(GPE Honolulu/NNP)
+,,
+(PERSON Hawaii/NNP)
+./.
+He/PRP
+was/VBD
+the/DT
+44°/CD
+president/NN
+of/IN
+the/DT
+(GPE United/NNP States/NNPS) ./.)
+Ainda assim há um pequeno erro em "Hawaii", mas já ficou muito melhor, não é mesmo?
+Mesmo havendo um erro maior utilizando um modelo pré-treinado em uma outra língua, se ambas pertencem à mesma família, o modelo em geral já entrega uma performance boa.
+Por exemplo: as línguas da família Indo-Europeia como espanhol, inglês, português, russo, alemão, francês e outros, possuem padrões que podem fazer com que um modelo pré-treinado em uma possa ser usado em outra. Já se fossemos testar
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Página 8 de 24
+em textos japoneses, esses modelos teriam uma performance bem mais baixa, visto
+que são idiomas bem diferentes.
+SpaCy
+pip install spacy
+python -m spacy download pt_core_news_sm
+import spacy
+nlp = spacy.load('pt_core_news_sm')
+texto = "Barack Obama nasceu em Honolulu, Havaí. Ele foi o
+$44^{\circ}$ presidente dos Estados Unidos."
+doc = nlp (texto)
+for ent in doc.ents:
+print(ent.text, ent.label )
+Saída:
+Barack Obama PER
+Honolulu LOC
+Havaí LOC
+Estados Unidos LOC
+Perfeito!
+BERT com fine-tuning
+O modelo a seguir foi pré-treinado na tarefa de reconhecimento de entidades nomeadas usando como corpo o BERTimbau, que é pré-treinado na língua portuguesa. Dessa forma, uma cabeça de classificação de entidades foi adicionada usando artigos da Globo News. Mais informações sobre o modelo estão disponíveis na documentação.
+transformers import DistilBertTokenizerFast, pipeline
+from
+model
+BertForTokenClassification,
+BertForTokenClassification.from_pretrained('monilouise/ner_pt_ br')
+tokenizer = DistilBertTokenizerFast.from_pretrained( 'neuralmind/bert-base-portuguese-cased'
+)
+model max length=512
+do_lower_case=False
+ner = pipeline('ner', model=model, tokenizer=tokenizer, grouped_entities=True)
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Página 9 de 24
+texto = "Barack Obama nasceu em Honolulu, Havaí. Ele foi o
+$44^{\circ}$ presidente dos Estados Unidos."
+entidades = ner(texto) for ent in entidades: print(f"{ent('word']}:
+({ent['score'):.2f})")
+{ent['entity_group']}
+Saída:
+Bara: PESSOA (0.95) ##ck: PESSOA (0.54) Obama: PESSOA (0.95) Hon: LOC (0.99) ##olulu: LOC (0.60) Havaí: LOC (0.94) Estados: LOC (0.78)
+Tudo certinho! Você também pode usar o modelo no servidor do Hugging Face
+para fazer alguns testes.
+4 Inference API
+Token Classification
+Barack Obama nasceu em Honolulu, Havaí. Ele foi o
+44° presidente dos Estados Unidos.
+Compute
+Computation time on cpu: 0.029 s
+Bara PESSOA CK PESSOA Obama PESSOA nasceu em
+Hon Loc olulu Loc, Havaí Loc. Ele foi o 44°
+presidente dos Estados Loc Unidos Loc
+Figura 1 Inference API Fonte: Hugging Face (2024)
+Agora que já usamos modelos prontos, vamos ver como treinar o nosso
+próprio?
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Página 10 de 24
+Treinando um modelo multilinguagem
+Prontos(as) para treinar um modelo multilinguagem para Reconhecimento de Entidade Nomeada (NER)? Para isso, vamos usar um pedaço do dataset "XTREME" (Cross-lingual TRansfer Evaluation of Multilingual Encoders), chamado de WikiANN ou PAN-X. Esse dataset possui muitas configurações e idiomas.
+from datasets import get_dataset_config_names xtreme_subsets = get_dataset_config_names("xtreme")
+print (f"XTREME
+configurações.")
+panx_subsets
+s.startswith("PAN")]
+possui
+{len(xtreme_subsets)}
+= [s for S in xtreme subsets if
+print (panx_subsets[:3])
+Saída:
+XTREME possui 183 configurações.
+['PAN-X.af', 'PAN-X.ar', 'PAN-X.bg']
+Os datasets possuem nomes padronizados, como podemos ver acima, com "PAN-X” e o código da língua.
+Vamos pegar os seguintes idiomas: inglês, português e francês. Além disso, vamos fazer uma redução do dataset por proporções para termos uma visão mais realista. Datasets desbalanceados são muito comuns em problemas da vida real. Pense na proporção de pessoas que falam um determinado idioma: é muito mais fácil conseguir dados em inglês do que nos demais idiomas, certo?
+from collections import defaultdict
+from datasets import DatasetDict, load_dataset import pandas as pd
+langs = ['pt', 'en', 'fr']
+=
+prop [0.13, 0.72, 0.15]
+panx ch = defaultdict (DatasetDict)
+for lang, prop in zip (langs, prop):
+ds = load_dataset('xtreme', name='PAN-X.{lang}')
+for split in ds:
+panx_ch [lang] [split] = ds [split).shuffle(seed=0).select( range (int (prop
+)
+*
+ds[split].num_rows))
+pd. DataFrame({lang: panx_ch [lang] ('train').num_rows] for
+lang in langs}, index=['Número de observações de treino'])
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Saída:
+Página 11 de 24
+pt
+en
+fr 3000
+Número de observações de treino 2600 14400
+Como temos muito mais exemplos da língua inglesa por design, vamos começar por ela. Primeiramente vamos treinar nosso modelo na língua inglesa e testar ele nas línguas inglesa, portuguesa e francesa.
+Vamos inspecionar um exemplo no dataset inglês:
+exemplo = panx_ch['en') ('train'] [0] for key, value in exemplo.items(): print(f'{key}: {value}')
+Saída:
+tokens: ["'",
+"''",
+ner_tags: [0,
+0, 3,
+langs: ['en',
+'en',
+'Toronto', 'Lynx', "''", "'"] 4, 0, 0]
+'en', 'en', 'en', 'en']
+Podemos ver que a coluna ner_tags corresponde a um código mapeado. Então, vamos transformá-lo em uma nova coluna mais familiar, com as tags LOC, PER e ORG. Podemos fazer isso através do atributo features.
+for key, value in panx_ch['en') ('train').features.items(): print(f'{key}: {value}')
+Saída:
+tokens: Sequence (feature Value (dtype='string',
+length $=-1$, id=None)
+id=None),
+ner_tags: Sequence(feature=ClassLabel (names=['0', 'B-PER', 'I-PER', 'B-ORG', 'I-ORG', 'B-LOC', 'I-LOC'], id=None), length=- 1, id=None)
+langs:
+Sequence (feature=Value (dtype='string', id=None),
+length=-1, id=None)
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Página 12 de 24
+Podemos ver que dentro do atributo features temos o ner_tags, que possui um objeto ClassLabel com os nomes de cada tag mapeados. Agora vamos conceber uma função que crie a coluna usando o que descobrimos.
+tags = panx_ch['en') ('train').features['ner_tags').feature def create_tag_names_column (batch): return
+{'ner_tags_str': tags.int2str(idx) for idx in
+batch ['ner_tags']]}
+=
+panx_en panx_ch ['en').map(create_tag_names_column) exemplo = panx_en ['train'] [0]
+pd. DataFrame ( exemplo ['tokens'), exemplo['ner_tags_str']],
+['tokens', 'tags'])
+Saída:
+0
+1
+2
+tokens tags
+"
+Toronto
+Ο
+Ο
+B-ORG
+3 Lynx I-ORG
+4
+5
+"
+Ο Ο
+Já vemos alguns desafios que enfrentamos lidando com idiomas: Toronto é uma cidade que seria classificada como local, mas Toronto Lynx é um time de futebol, então é classificado como organização. Outro desafio importante é a criação das tags: podemos ver que é bem trabalhoso e complexo taggear todas as sentenças de um dataset inteiro para treinarmos o modelo.
+Dito isso, vamos entender a distribuição de tags no nosso dataset.
+from collections import Counter
+split2freqs = defaultdict (Counter)
+for split, dataset in panx_en.items():
+for row in dataset ['ner_tags_str']:
+for tag in row:
+if tag.startswith('B'):
+tag_type = tag.split('-')[1]
+split2freqs [split [tag_type]
+$+=1$
+pd. DataFrame.from_dict (split2freqs, orient='index')
+Saída:
+ORG
+PER
+LOC
+train
+6715
+6542
+6767
+validation
+3364
+3276
+3458
+test
+3385
+3339
+3357
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Extração de Entidades
+Página 13 de 24
+As distribuições estão bem homogêneas entre os datasets, o que é ótimo.
+Agora, vamos para o modelo. Nesse exemplo, utilizaremos o XLM-ROBERTa. O modelo RoBERTa modifica o pré-treinamento do BERT, melhorando o modelo ao treinar em mais dados por mais tempo, além de não realizar a tarefa de Next Sentence Prediction.
+O XLM-ROBERTa, por sua vez, estende o RoBERTa para um pré-treinamento multilíngua. Outra diferença para o BERT é a tokenização: enquanto o BERT tokeniza usando WordPiece, o XLM-ROBERTa utiliza o Sentence Piece. Essa mudança de tokenização é especialmente importante para lidar com línguas em que a separação por espaço não faz sentido, como na língua japonesa, sendo mais agnóstica.
+from transformers import XLMRoberta ForTokenClassification, AutoTokenizer, AutoConfig
+import torch
+model name = 'xlm-roberta-base'
+tokenizer = AutoTokenizer.from_pretrained (model_name)
+index2tag = {idx: tag for idx, tag in enumerate (tags.names)} tag2index = {tag: idx for idx, tag in enumerate (tags.names)} config = AutoConfig.from_pretrained(
+model name,
+num_labels=tags.num_classes,
+id2label=index2tag,
+label2id=tag2index
+)
+device = torch.device('cuda' if torch.cuda.is_available()
+else cpu')
+model
+XLMRobertaForTokenClassification.from_pretrained (model_name, config=config).to (device)
+Antes de realizar o fine-tuning do modelo, primeiro precisamos tokenizar nosso dataset e alinhar e limpar nossos labels.
+Não queremos que tokens de carácter especial, como o <s> e o <\s> que indicam início e fim de sentença, sejam classificados. Também queremos ignorar a classificação das subpalavras: somente a primeira deve ser classificada, as demais serão tratadas posteriormente quando juntarmos os tokens em palavras. Para isso, vamos usar os word_ids. Vamos ver um exemplo a seguir.
+tokenized_input
+is_split_into_words=True)
+tokenizer (exemplo ['tokens'],
+PDF exclusivo para Geovana Godoy Viana - rm365544 geovana.godoy12@gmail.com
+Extração de Entidades
+Página 14 de 24
+tokens
+tokenizer.convert_ids_to_tokens (tokenized_input("input_ids"])
+Ids"])
+word_ids = tokenized_input.word_ids() pd. DataFrame ([tokens, word_ids], index=["Tokens",
+"Word
+Saída:
+0
+1
+2
+3
+4
+5
+6
+7
+8
+Tokens
+<s>
+1
+"
+_ Toronto
+_Lyn
+X
+"
+</s>
+Word Ids
+None
+0
+1
+2
+3
+3
+4
+5
+None
+Podemos ver que os caracteres especiais estão com Ids None. Além disso, as subpalavras possuem o mesmo id da anterior: a palavra Lynx foi dividida em _Lyn e x, por exemplo, ambas com o id 3. Com isso, podemos tratar os labels para quando forem None ou iguais ao anterior e alocamos o label id -100. Porque -100? Porque a classe torch.nn.CrossEntropyLoss possui um atributo chamado ignore_index com valor -100. Dessa forma, os tokens associados com label -100 serão ignorados durante o treinamento. Vamos para nosso tratamento?
+def tokenize and align labels (examples): tokenized inputs
+tokenizer (examples('tokens'],
+truncation=True, is_split_into_words=True) labels = []
+for idx, label in enumerate (examples['ner_tags')):
+word _ids = tokenized_inputs.word_ids (batch_index=idx) previous_word_idx = None
+labels ids = []
+for word idx in word ids:
+if word idx is None or word idx
+previous_word_idx:
+else:
+labels_ids.append(-100)
+labels_ids.append(label [word_idx])
+previous_word_idx = word_idx
+labels.append(labels_ids)
+tokenized_inputs ['labels' = labels
+return tokenized inputs
+def encode_panx_dataset(corpus):
+return corpus.map(tokenize_and_align_labels, batched=True,
+remove_columns=['langs', 'ner_tags', 'tokens'])
+panx_en_encoded = encode panx_dataset (panx_ch('en'])
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Página 15 de 24
+A avaliação de um modelo NER é similar ao de modelos de classificação, usando métricas como acuracidade, precision, recall e f1-score. A diferença é que todas as palavras de uma entidade precisam ser previstas corretamente para uma previsão contar como correta. Para isso, usaremos a biblioteca seqeval, que faz exatamente isso. Veja um exemplo a seguir.
+from seqeval.metrics import classification report y_true = [['0', '0', '0', 'B-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
+'0', 'B-MISC', 'I-MISC', 'I-MISC', 'I-
+y_pred = [['0', MISC', 'O'], ['B-PER', 'I-PER', ' ']]
+classification_report(y_true, y pred)
+Saída:
+precision
+recall
+f1-score
+support
+MISC
+0.00
+0.00
+0.00
+1
+PER
+1.00
+1.00
+1.00
+1
+micro avg
+0.50
+0.50
+0.50
+2
+macro avg
+0.50
+0.50
+0.50
+2
+weighted avg
+0.50
+0.50
+0.50
+2
+Para usar essa biblioteca, precisaremos formatar as previsões e os labels para
+o formato de lista de listas, conforme visto anteriormente, em que cada lista corresponde a um exemplo do dataset.
+import numpy as np
+def align_predictions (predictions, label_ids): preds = np.argmax(predictions, axis=2)
+)
+batch_size, seq_len = preds.shape labels_list, preds_list = (), []
+for batch_idx in range(batch_size):
+example_label, example_preds = [], []
+for seq_idx in range(seq_len):
+if label_ids [batch_idx, seq_idx] $!=-100$:
+example_label.append(
+index2tag [label_ids [batch_idx) [seq_idx]]
+example_preds.append(
+index2tag [preds [batch_idx) (seq_idx]]
+)
+labels_list.append(example_label)
+preds_list.append(example_preds)
+return predslist, labels_list
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Página 16 de 24
+Agora temos tudo que precisamos para realizar o fine-tuning do XLM- ROBERTa. Primeiramente, faremos somente no subset do idioma inglês e testaremos o modelo nos demais idiomas, português e francês. É interessante notar que essa
+parte já fica bem parecida com a da aula passada de análise de sentimento.
+from transformers import TrainingArguments, Trainer
+num_epochs
+$=3$
+batch size $=24$
+logging_steps = len (panx_en_encoded['train')) // batch_size finetuned_model_name $=f^{\prime}${model_name}-finetuned-panx-en'
+training_args = TrainingArguments (
+output_dir=finetuned_model_name,
+log_level='error',
+num_train_epochs=num_epochs,
+per_device_train_batch_size=batch_size,
+per_device eval batch_size=batch size,
+evaluation_strategy='epoch',
+save_steps=1e6,
+weight decay $=0.01$,
+disable_tqdm=False,
+logging_steps=logging_steps,
+push_to_hub=False
+)
+from seqeval.metrics import f1 score
+def compute_metrics(eval_pred):
+y_pred, y_true = align_predictions( eval_pred.predictions, eval_pred.label_ids )
+return {'f1': f1_score(y_true, y pred)}
+Por fim, precisamos aplicar o método pad para deixar todas as sequências do mesmo tamanho em um batch (lote). Para isso, usaremos o data collator. Precisamos aplicá-lo tanto no texto como nos labels, porque agora temos labels de tamanhos diferentes.
+São labels sequenciais, ao contrário do que tínhamos na aula passada na análise de sentimento, em que havia somente a previsão de uma classe. O pad seguirá a mesma lógica implementada, transformando os tokens pad em ids de -100 para serem ignorados durante o treinamento.
+from
+transformers
+DataCollatorForTokenClassification
+data collator
+DataCollatorForTokenClassification (tokenizer)
+import
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Página 17 de 24
+trainer
+=
+Trainer (model,args=training_args, data collator=data collator, compute_metrics=compute_metrics, train dataset=panx en encoded['train'],
+eval_dataset=panx_en_encoded ['validation'],
+tokenizer=tokenizer)
+trainer.train()
+'learning_rate': 3.3333333333333335e-05, 'epoch': 1.0}
+{'eval loss':
+0.7797924949093377,
+10.835453987121582,
+'eval fl': 393.4814,
+Saída:
+{'loss':
+0.1034,
+'grad_norm':
+0.3764185905456543,
+'eval runtime':
+'eval_samples_per_second':
+0.762, 'epoch': 1.0}
+{'loss':
+0.1558,
+'grad norm':
+{'eval loss':
+0.3161863684654236,
+0.8053080011752032,
+'eval_samples_per_secon{'eval_loss':
+18.298, 'eval_steps_per_second':
+'learning_rate': 1.6666666666666667e-05, 'epoch': 2.0}
+'eval runtime':
+5.884861469268799,
+'eval fl':
+392.6699,
+0.3764185905456543,
+'eval f1': 0.7797924949093377, 'eval runtime': 393.4814,
+'eval_samples_per_second': 18.298, 'eval_steps_per_second': 0.762, 'epoch': 1.0}
+{'loss':
+0.1558,
+'learning_rate': 1.6666666666666667e-05, 'epoch': 2.0}
+{'eval loss':
+0.8053080011752032,
+'eval_samples_per_second':
+0.764, 'epoch': 2.0}
+{'loss':
+0.0934,
+'grad norm':
+0.3161863684654236,
+'eval runtime':
+18.336,
+'grad norm':
+0.32673001289367676,
+'learning_rate': 0.0, 'epoch': 3.0}
+{'eval loss':
+0.8179060665362037,
+'eval_samples_per_second':
+0.847, 'epoch': 3.0}
+5.884861469268799,
+'eval f1': 392.6699,
+'eval_steps_per_second':
+'eval runtime':
+2.8271751403808594,
+'eval f1': 354.2475,
+20.325, 'eval_steps_per_second':
+{'train_runtime': 14352.5169, 'train_samples_per_second':
+'train_steps_per_second':
+0.125,
+'train_loss':
+metrics={'train runtime':
+3.01,
+0.11755364523993599, 'epoch': 3.0}
+TrainOutput (global_step $=1800$,
+training loss=0.11755364523993599,
+14352.5169,
+3.01,
+'train_steps_per_second':
+0.125,
+'total_flos':
+840013140205008.0, 'train_loss': 0.11755364523993599, 'epoch':
+3.0})
+'train_samples_per_second':
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Página 18 de 24
+Treinar o modelo pode demorar bastante, tenha paciência. Mas podemos ver que os resultados foram muito bons, com F1 de cerca de 82%! Após isso já teremos nosso modelo treinado, agora é só formatar o resultado final:
+def tag_text (text, tags, model, tokenizer): tokens = tokenizer(text).tokens ()
+input_ids
+= return_tensors='pt').input_ids.to (device) outputs = model (input_ids) [0] predictions = torch.argmax(outputs, dim=2) = [tags.names [p] predictions 0].cpu().numpy()]
+preds
+return pd. Dataframe ([tokens, 'Tags'])
+for
+tokenizer (text,
+P
+in
+preds], index=['Tokens',
+Nosso modelo, até então, foi treinado somente com texto do idioma inglês. Será
+que ele já performa bem nos idiomas português e francês?
+def get f1 score (trainer, dataset):
+return trainer.predict(dataset).metrics['test_f1']
+def evaluate_lang_performance (lang, trainer): panx_ds = encode_panx_dataset (panx_ch [lang]) return get_f1_score (trainer, panx_ds ['test']) f1_scores = defaultdict (dict)
+for lang in langs:
+f1 scores('en') [lang]
+trainer)
+f1 scores
+=
+evaluate_lang_performance (lang,
+Saída:
+defaultdict (<class
+'dict'>,
+0.7679671457905545, 0.7699484409526148}})
+'en':
+{'en': 0.8178026399725207,
+{'pt': 'fr':
+Incrível! Mesmo o treinamento sendo no idioma inglês, já conseguimos usar
+esse modelo nos outros idiomas com uma boa performance, com F1 de cerca de 77%.
+Mas ainda é possível melhorar: podemos treinar um modelo em todos os idiomas de uma vez.
+from datasets import concatenate_datasets
+def concatenate_splits (corpus):
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Página 19 de 24
+multi_corpus = DatasetDict()
+for split in corpus 0].keys():
+multi corpus [split] = concatenate_datasets(
+[data [split for data in corpus]
+).shuffle (seed=42)
+return multi_corpus
+panx_all_encoded = [panx en encoded]
+for lang in ['pt', 'fr']:
+panx_encoded = encode_panx_dataset (panx_ch [lang])
+panx_all_encoded.append(panx_encoded)
+=
+corpus concatenate_splits (panx_all_encoded)
+training_args.output_dir
+training_args.logging_steps
+= len (corpus ['train'))
+= f'{model_name}-finetuned-panx-
+all'
+//
+batch size
+trainer
+=
+data_collator=data_collator, train_dataset=corpus['train'],
+Trainer (model,args=training_args, compute metrics=compute metrics,
+eval_dataset=corpus['validation'), tokenizer=tokenizer)
+trainer.train()
+Saída:
+{'loss':
+0.1942,
+'grad norm':
+11.842309951782227,
+'learning_rate': 3.3353317346123105e-05, 'epoch': 1.0}
+{'eval loss':
+0.8157923201730666,
+0.29228514432907104,
+'eval f1':
+'eval runtime':
+305.4299,
+'eval_samples_per_second':
+32.741, 'eval_steps_per_second':
+1.365, 'epoch': 1.0}
+{'loss':
+0.1225,
+'grad norm':
+10.712843894958496,
+{'eval loss':
+0.8195355240752147,
+'eval_samples_per_second':
+0.16, 'epoch': 2.0}
+{'eval loss':
+'learning_rate': 1.6706634692246204e-05, 'epoch': 2.0}
+'eval_steps_per_second':
+0.3558487892150879,
+0.31587448716163635,
+'eval runtime':
+'eval f1': 2602.45,
+3.843,
+'eval f1':
+0.8312026943830805,
+'eval runtime':
+323.4996,
+'eval_samples per second':
+30.912, 'eval_steps_per_second':
+1.289, 'epoch': 3.0}
+{'train runtime': 95680.6525, 'train samples per second':
+0.627, 'train _steps_per_second':
+0.026,
+'train_loss':
+0.12965314505959777, 'epoch': 3.0}
+training loss=0.12965314505959777,
+95680.6525,
+TrainOutput (global_step $=2502$,
+'train_samples_per_second'
+metrics={'train_runtime':
+0.627,
+'train_steps_per_second':
+0.026,
+'total flos':
+1143126996806784.0, 'train_loss': 0.12965314505959777, 'epoch':
+3.0})
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Página 20 de 24
+Que resultado! 83% de F1 score no total! Agora vamos testar o modelo
+multilinguagem nos nossos datasets e ver como ficou.
+for idx, lang in enumerate (langs):
+)
+f1_scores('all') lang] = get f1 score( trainer, panx_all_encoded[idx]['test']
+scores data = {
+'en': f1 scores('en'],
+'all': f1_scores ('all'],
+}
+f1 scores df
+pd. DataFrame (scores_data).T.round(4).rename_axis( index='Fine-tuned on', columns= 'Evaluated on' )
+f1 scores df
+Saída:
+Evaluated
+on
+pt
+en
+fr
+Fine-tuned on
+en
+0.7680
+0.8178
+0.7699
+all
+0.8216
+0.8727
+0.8511
+Veja que usar outros idiomas no treinamento aumentou o resultado testando somente no dataset em inglês também, indo de 82% para 87% em F1! Isso porque ele aprendeu outros padrões com os outros idiomas que puderam ser aproveitados. No entanto, isso é verdade apenas para aqueles idiomas que são similares, conforme comentamos anteriormente: todos os idiomas testados pertencem à família Indo- Europeia, que compartilham padrões entre si.
+Esses padrões fazem com que o modelo performe de maneira quase equivalente nesses idiomas. Podemos ver que o F1 em todos os três idiomas ficou bem parecido, em torno de 85%, o que é muito bom para um modelo de Reconhecimento de Entidade Nomeada.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+O QUE VOCÊ VIU NESTA AULA?
+Página 21 de 24
+Nessa aula você aprendeu como desenvolver e usar modelos para o reconhecimento de entidades nomeadas, tanto para um idioma específico como multi- idioma. Agora você já pode extrair informações preciosas dos dados para análises, extração de variáveis para outros modelos e muito mais.
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+Página 22 de 24
+REFERÊNCIAS
+GITHUB. seqeval. 2024. Disponível em: <https://github.com/chakki-works/seqeval>. Acesso em: 25 jul. 2024.
+HUGGING FACE. monilouise/ner_news_portuguese. 2024. Disponível em: <https://huggingface.co/monilouise/ner_news_portuguese>. Acesso em: 25 jul. 2024.
+2024.
+HUGGING FACE. XLM-ROBERTa. Disponível em: <https://huggingface.co/docs/transformers/model_doc/xlm-roberta>. Acesso em: 25 jul. 2024.
+TUNSTALL, L.; VON WERRA, L.; WOLF, T. Natural Language Processing with Transformers. Revised Edition. [s.l.]: O'Reilly Media, Inc., 2022.
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+Extração de Entidades
+PALAVRAS-CHAVE
+Página 23 de 24
+Processamento de Linguagem Natural. Transformers. Transferência de Conhecimento. Bert. Aprendizado de Máquina. Extração de Entidades Nomeadas. Reconhecimento de Entidades Nomeadas.
+FIAP
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
+POS TECH
+PDF exclusivo para Geovana Godoy Viana - rm365544
+geovana.godoy12@gmail.com
