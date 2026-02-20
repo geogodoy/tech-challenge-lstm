@@ -1,13 +1,13 @@
 # ═══════════════════════════════════════════════════════════════
-# 📌 ETAPA 4: Modelo LSTM
-# 🎯 Objetivo: Definir a arquitetura da rede neural
+# ETAPA 4: Modelo LSTM
+# Objetivo: Definir a arquitetura da rede neural
 # ═══════════════════════════════════════════════════════════════
 
 import torch
 import torch.nn as nn
 
 # ══════════════════════════════════════════════════════════════════
-# 🧠 ARQUITETURA LSTM
+# ARQUITETURA LSTM
 # ══════════════════════════════════════════════════════════════════
 
 class StockLSTM(nn.Module):
@@ -67,7 +67,7 @@ class StockLSTM(nn.Module):
         self.num_layers = num_layers
         self.dropout_rate = dropout
         
-        # 1️⃣ Camada LSTM: O coração que guarda o contexto temporal
+        # Camada LSTM: O coracao que guarda o contexto temporal
         # batch_first=True: entrada no formato (batch, seq, features)
         self.lstm = nn.LSTM(
             input_size=input_size,
@@ -77,12 +77,12 @@ class StockLSTM(nn.Module):
             dropout=dropout if num_layers > 1 else 0  # Dropout entre camadas LSTM
         )
         
-        # 2️⃣ Dropout: Evita que o modelo "decore" os preços passados (overfitting)
-        # Durante o treino, desliga neurônios aleatoriamente
+        # Dropout: Evita que o modelo "decore" os precos passados (overfitting)
+        # Durante o treino, desliga neuronios aleatoriamente
         self.dropout = nn.Dropout(dropout)
         
-        # 3️⃣ Camada Linear: Transforma a memória da LSTM no preço final previsto
-        # Entrada: hidden_size (50), Saída: 1 (preço)
+        # Camada Linear: Transforma a memoria da LSTM no preco final previsto
+        # Entrada: hidden_size (50), Saida: 1 (preco)
         self.linear = nn.Linear(hidden_size, 1)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -170,17 +170,17 @@ def count_parameters(model: nn.Module) -> int:
 
 
 # ══════════════════════════════════════════════════════════════════
-# 🚀 EXECUÇÃO
+# EXECUCAO
 # ══════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
     print("="*60)
-    print("📌 ETAPA 4: Construção do Modelo LSTM")
+    print("ETAPA 4: Construcao do Modelo LSTM")
     print("="*60)
     
     # Configurar dispositivo
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print(f"\n🖥️ Dispositivo: {device}")
+    print(f"\nDispositivo: {device}")
     if device == 'cuda':
         print(f"   GPU: {torch.cuda.get_device_name(0)}")
     
@@ -188,15 +188,15 @@ if __name__ == "__main__":
     model = create_model(device=device)
     
     # Exibir arquitetura
-    print(f"\n🧠 Arquitetura do modelo:")
+    print(f"\nArquitetura do modelo:")
     print(model)
     
-    # Contar parâmetros
+    # Contar parametros
     n_params = count_parameters(model)
-    print(f"\n📊 Total de parâmetros treináveis: {n_params:,}")
+    print(f"\nTotal de parametros treinaveis: {n_params:,}")
     
     # Teste com dados simulados
-    print(f"\n🧪 Teste com dados simulados:")
+    print(f"\nTeste com dados simulados:")
     batch_size = 32
     seq_length = 60
     input_size = 1
@@ -211,10 +211,10 @@ if __name__ == "__main__":
         output = model(x_test)
     print(f"   Output shape: {output.shape}")
     
-    # ✅ Checkpoint
+    # Checkpoint
     print("\n" + "="*60)
-    print("🎉 CHECKPOINT: O cérebro nasceu!")
+    print("CHECKPOINT: O cerebro nasceu!")
     print("="*60)
-    print(f"\n📋 Configuração do modelo:")
+    print(f"\nConfiguracao do modelo:")
     for key, value in model.get_config().items():
         print(f"   {key}: {value}")

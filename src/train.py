@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════════════════
-# 📌 ETAPA 5: Treinamento
-# 🎯 Objetivo: Treinar o modelo ajustando os pesos
+# ETAPA 5: Treinamento
+# Objetivo: Treinar o modelo ajustando os pesos
 # ═══════════════════════════════════════════════════════════════
 
 import torch
@@ -18,7 +18,7 @@ from model import StockLSTM, create_model
 from preprocessing import preprocess_data
 
 # ══════════════════════════════════════════════════════════════════
-# 🔧 CONFIGURAÇÕES DE TREINAMENTO
+# CONFIGURACOES DE TREINAMENTO
 # ══════════════════════════════════════════════════════════════════
 
 # Hiperparâmetros
@@ -56,37 +56,37 @@ def train_model(
     Returns:
         Tuple com (modelo treinado, lista de train_losses, lista de val_losses)
     """
-    # 1️⃣ Configurar dispositivo (GPU se disponível)
+    # Configurar dispositivo (GPU se disponivel)
     if device is None:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
     model = model.to(device)
     
-    # 2️⃣ Mover dados para o dispositivo
+    # Mover dados para o dispositivo
     X_train = X_train.to(device)
     y_train = y_train.to(device)
     X_test = X_test.to(device)
     y_test = y_test.to(device)
     
-    # 3️⃣ Definir função de perda e otimizador
-    # MSELoss: Mean Squared Error - ideal para regressão
+    # Definir funcao de perda e otimizador
+    # MSELoss: Mean Squared Error - ideal para regressao
     criterion = nn.MSELoss()
     
     # Adam: Otimizador adaptativo que ajusta a taxa de aprendizado
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     
     if verbose:
-        print(f"\n🔧 Configuração do treinamento:")
+        print(f"\nConfiguracao do treinamento:")
         print(f"   Dispositivo: {device}")
-        print(f"   Épocas: {epochs}")
+        print(f"   Epocas: {epochs}")
         print(f"   Learning Rate: {learning_rate}")
         print(f"   Loss Function: MSELoss")
         print(f"   Otimizador: Adam")
         print(f"\n{'='*60}")
-        print("🏋️ Iniciando treinamento...")
+        print("Iniciando treinamento...")
         print(f"{'='*60}\n")
     
-    # 4️⃣ Listas para armazenar histórico de perdas
+    # Listas para armazenar historico de perdas
     train_losses = []
     val_losses = []
     
@@ -97,7 +97,7 @@ def train_model(
     # Tempo inicial
     start_time = time.time()
     
-    # 5️⃣ Loop de treinamento
+    # Loop de treinamento
     for epoch in range(epochs):
         # ══════════════════════════════════════════════════════════
         # FASE DE TREINO
@@ -143,9 +143,9 @@ def train_model(
     
     if verbose:
         print(f"\n{'='*60}")
-        print(f"✅ Treinamento concluído!")
+        print(f"Treinamento concluido!")
         print(f"{'='*60}")
-        print(f"\n📊 Resumo:")
+        print(f"\nResumo:")
         print(f"   Tempo total: {total_time:.1f}s ({total_time/epochs:.2f}s/época)")
         print(f"   Train Loss final: {train_losses[-1]:.6f}")
         print(f"   Val Loss final: {val_losses[-1]:.6f}")
@@ -194,7 +194,7 @@ def plot_training_history(
     
     if save_path:
         plt.savefig(save_path, dpi=150, bbox_inches='tight')
-        print(f"📊 Gráfico salvo em: {save_path}")
+        print(f"Grafico salvo em: {save_path}")
     
     plt.close()
 
@@ -230,29 +230,29 @@ def save_trained_model(
         'final_val_loss': val_losses[-1]
     }, model_path)
     
-    print(f"💾 Modelo salvo em: {model_path}")
+    print(f"Modelo salvo em: {model_path}")
     
     return model_path
 
 
 # ══════════════════════════════════════════════════════════════════
-# 🚀 EXECUÇÃO
+# EXECUCAO
 # ══════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
     print("="*60)
-    print("📌 ETAPA 5: Treinamento do Modelo LSTM")
+    print("ETAPA 5: Treinamento do Modelo LSTM")
     print("="*60)
     
-    # 1️⃣ Carregar dados pré-processados
-    print("\n📥 Carregando dados pré-processados...")
+    # Carregar dados pre-processados
+    print("\nCarregando dados pre-processados...")
     X_train, X_test, y_train, y_test, scaler = preprocess_data(save_scaler=False)
     
-    # 2️⃣ Criar modelo
-    print("\n🧠 Criando modelo...")
+    # Criar modelo
+    print("\nCriando modelo...")
     model = create_model()
     
-    # 3️⃣ Treinar modelo
+    # Treinar modelo
     model, train_losses, val_losses = train_model(
         model=model,
         X_train=X_train,
@@ -263,16 +263,16 @@ if __name__ == "__main__":
         learning_rate=LEARNING_RATE
     )
     
-    # 4️⃣ Salvar modelo treinado
-    print("\n💾 Salvando modelo...")
+    # Salvar modelo treinado
+    print("\nSalvando modelo...")
     save_trained_model(model, train_losses, val_losses)
     
-    # 5️⃣ Plotar histórico de treinamento
-    print("\n📊 Gerando gráficos...")
+    # Plotar historico de treinamento
+    print("\nGerando graficos...")
     plot_path = MODELS_DIR / "training_history.png"
     plot_training_history(train_losses, val_losses, save_path=plot_path)
     
-    # ✅ Checkpoint
+    # Checkpoint
     print("\n" + "="*60)
-    print("🎉 CHECKPOINT: Modelo treinado!")
+    print("CHECKPOINT: Modelo treinado!")
     print("="*60)

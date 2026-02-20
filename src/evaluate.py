@@ -1,7 +1,7 @@
 # ═══════════════════════════════════════════════════════════════
-# 📌 ETAPA 6: Avaliação do Modelo
-# 🎯 Objetivo: Calcular métricas e avaliar performance
-# 📍 Referência: GUIA_TREINAMENTO_E_AVALIACAO.md - Parte 2
+# ETAPA 6: Avaliacao do Modelo
+# Objetivo: Calcular metricas e avaliar performance
+# Referencia: GUIA_TREINAMENTO_E_AVALIACAO.md - Parte 2
 # ═══════════════════════════════════════════════════════════════
 
 import torch
@@ -29,7 +29,7 @@ def load_trained_model(model_path: Path = None) -> tuple:
     if model_path is None:
         model_path = MODELS_DIR / "model_lstm.pth"
     
-    print(f"📥 Carregando modelo de: {model_path}")
+    print(f"Carregando modelo de: {model_path}")
     
     checkpoint = torch.load(model_path, weights_only=False)
     
@@ -37,7 +37,7 @@ def load_trained_model(model_path: Path = None) -> tuple:
     model.load_state_dict(checkpoint['model_state_dict'])
     model.eval()
     
-    print(f"✅ Modelo carregado!")
+    print(f"Modelo carregado!")
     print(f"   Train Loss final: {checkpoint['final_train_loss']:.6f}")
     print(f"   Val Loss final:   {checkpoint['final_val_loss']:.6f}")
     
@@ -114,59 +114,59 @@ def plot_predictions(actual_reais, predictions_reais, save_path=None):
     
     if save_path:
         plt.savefig(save_path, dpi=150, bbox_inches='tight')
-        print(f"📊 Gráfico salvo em: {save_path}")
+        print(f"Grafico salvo em: {save_path}")
     
     plt.close()
 
 
 def diagnose_model(mape):
     """
-    Diagnóstico baseado no MAPE.
+    Diagnostico baseado no MAPE.
     """
-    print(f"\n🔍 DIAGNÓSTICO:")
+    print(f"\nDIAGNOSTICO:")
     if mape < 5:
-        print("   ✅ Excelente! Modelo muito preciso.")
+        print("   Excelente! Modelo muito preciso.")
         return "excelente"
     elif mape < 10:
-        print("   ✅ Bom! Modelo com boa precisão.")
+        print("   Bom! Modelo com boa precisao.")
         return "bom"
     elif mape < 20:
-        print("   ⚠️ Aceitável. Considere ajustes para melhorar.")
+        print("   Aceitavel. Considere ajustes para melhorar.")
         return "aceitavel"
     else:
-        print("   ❌ Precisa melhorar. Revise hiperparâmetros e dados.")
+        print("   Precisa melhorar. Revise hiperparametros e dados.")
         return "ruim"
 
 
 def evaluate_model():
     """
-    Pipeline completa de avaliação.
+    Pipeline completa de avaliacao.
     """
     print("=" * 60)
-    print("📌 ETAPA 6: Avaliação do Modelo LSTM")
+    print("ETAPA 6: Avaliacao do Modelo LSTM")
     print("=" * 60)
     
     # 1. Carregar modelo
-    print("\n📥 Carregando modelo treinado...")
+    print("\nCarregando modelo treinado...")
     model, checkpoint = load_trained_model()
     
     # 2. Carregar dados
-    print("\n📥 Carregando dados de teste...")
+    print("\nCarregando dados de teste...")
     X_train, X_test, y_train, y_test, scaler = preprocess_data(save_scaler=False)
     print(f"   Amostras de teste: {len(X_test)}")
     
-    # 3. Fazer previsões
-    print("\n🔮 Fazendo previsões...")
+    # 3. Fazer previsoes
+    print("\nFazendo previsoes...")
     predictions_np = make_predictions(model, X_test, scaler)
     
     # 4. Reverter normalização para R$
     predictions_reais = scaler.inverse_transform(predictions_np)
     actual_reais = scaler.inverse_transform(y_test.numpy())
     
-    print(f"   Previsões feitas: {len(predictions_reais)} amostras")
+    print(f"   Previsoes feitas: {len(predictions_reais)} amostras")
     
     # 5. Exibir exemplos
-    print(f"\n📋 Exemplos de previsões:")
+    print(f"\nExemplos de previsoes:")
     print(f"   {'Previsto':>12} | {'Real':>12} | {'Erro':>12}")
     print("   " + "-" * 42)
     for i in range(5):
@@ -175,9 +175,9 @@ def evaluate_model():
         erro = abs(prev - real)
         print(f"   R$ {prev:>9.2f} | R$ {real:>9.2f} | R$ {erro:>9.2f}")
     
-    # 6. Calcular métricas
+    # 6. Calcular metricas
     print("\n" + "=" * 50)
-    print("📊 MÉTRICAS DE AVALIAÇÃO")
+    print("METRICAS DE AVALIACAO")
     print("=" * 50)
     
     metrics = calculate_metrics(actual_reais, predictions_reais)
@@ -191,16 +191,16 @@ def evaluate_model():
     # 7. Diagnóstico
     diagnosis = diagnose_model(metrics['mape'])
     
-    # 8. Gerar gráficos
-    print("\n📊 Gerando gráficos...")
+    # 8. Gerar graficos
+    print("\nGerando graficos...")
     plot_path = MODELS_DIR / "predictions_vs_actual.png"
     plot_predictions(actual_reais, predictions_reais, save_path=plot_path)
     
     # 9. Resumo final
     print("\n" + "=" * 60)
-    print("✅ AVALIAÇÃO CONCLUÍDA!")
+    print("AVALIACAO CONCLUIDA!")
     print("=" * 60)
-    print(f"\n📋 Resumo:")
+    print(f"\nResumo:")
     print(f"   RMSE: R$ {metrics['rmse']:.2f} (erro médio em reais)")
     print(f"   MAPE: {metrics['mape']:.2f}% (erro percentual médio)")
     print(f"   Status: {diagnosis.upper()}")
@@ -209,7 +209,7 @@ def evaluate_model():
 
 
 # ══════════════════════════════════════════════════════════════════
-# 🚀 EXECUÇÃO
+# EXECUCAO
 # ══════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":

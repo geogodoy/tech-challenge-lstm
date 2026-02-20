@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════════════════
-# 📌 ETAPA 8: API FastAPI
-# 🎯 Objetivo: Servir o modelo LSTM via endpoint REST
+# ETAPA 8: API FastAPI
+# Objetivo: Servir o modelo LSTM via endpoint REST
 # ═══════════════════════════════════════════════════════════════
 
 import os
@@ -22,7 +22,7 @@ except ImportError:
     from src.model import StockLSTM
 
 # ══════════════════════════════════════════════════════════════════
-# 📁 CONFIGURAÇÃO DE PATHS
+# CONFIGURACAO DE PATHS
 # ══════════════════════════════════════════════════════════════════
 
 BASE_DIR = Path(__file__).parent.parent
@@ -33,7 +33,7 @@ SCALER_PATH = MODELS_DIR / "scaler.pkl"
 CONFIG_PATH = MODELS_DIR / "config.pkl"
 
 # ══════════════════════════════════════════════════════════════════
-# 🗄️ ESTADO GLOBAL DA APLICAÇÃO
+# ESTADO GLOBAL DA APLICACAO
 # ══════════════════════════════════════════════════════════════════
 
 class ModelState:
@@ -47,7 +47,7 @@ class ModelState:
 state = ModelState()
 
 # ══════════════════════════════════════════════════════════════════
-# 🚀 LIFESPAN (STARTUP/SHUTDOWN)
+# LIFESPAN (STARTUP/SHUTDOWN)
 # ══════════════════════════════════════════════════════════════════
 
 @asynccontextmanager
@@ -55,7 +55,7 @@ async def lifespan(app: FastAPI):
     """Gerencia o ciclo de vida da aplicação."""
     # STARTUP: Carregar modelo
     print("="*60)
-    print("🚀 Iniciando Stock Price Predictor API...")
+    print("Iniciando Stock Price Predictor API...")
     print("="*60)
     
     try:
@@ -66,15 +66,15 @@ async def lifespan(app: FastAPI):
         
         # Configurar dispositivo
         state.device = "cuda" if torch.cuda.is_available() else "cpu"
-        print(f"\n🖥️  Dispositivo: {state.device}")
+        print(f"\nDispositivo: {state.device}")
         
         # Carregar configurações
         state.config = joblib.load(CONFIG_PATH)
-        print(f"📋 Config carregado: seq_length={state.config.get('seq_length', 60)}")
+        print(f"Config carregado: seq_length={state.config.get('seq_length', 60)}")
         
         # Carregar scaler
         state.scaler = joblib.load(SCALER_PATH)
-        print(f"📊 Scaler carregado: MinMaxScaler")
+        print(f"Scaler carregado: MinMaxScaler")
         
         # Carregar modelo
         checkpoint = torch.load(MODEL_PATH, map_location=state.device, weights_only=False)
@@ -95,22 +95,22 @@ async def lifespan(app: FastAPI):
         
         state.is_loaded = True
         
-        print(f"🧠 Modelo carregado: hidden_size={model_config.get('hidden_size', 100)}")
+        print(f"Modelo carregado: hidden_size={model_config.get('hidden_size', 100)}")
         print("\n" + "="*60)
-        print("✅ API pronta para receber requisições!")
+        print("API pronta para receber requisicoes!")
         print("="*60 + "\n")
         
     except Exception as e:
-        print(f"\n❌ Erro ao carregar modelo: {e}")
+        print(f"\nErro ao carregar modelo: {e}")
         state.is_loaded = False
     
     yield
     
     # SHUTDOWN
-    print("\n🛑 Encerrando API...")
+    print("\nEncerrando API...")
 
 # ══════════════════════════════════════════════════════════════════
-# 📦 SCHEMAS (PYDANTIC)
+# SCHEMAS (PYDANTIC)
 # ══════════════════════════════════════════════════════════════════
 
 class PredictionRequest(BaseModel):
@@ -156,30 +156,30 @@ class ErrorResponse(BaseModel):
     error_type: str
 
 # ══════════════════════════════════════════════════════════════════
-# 🌐 APLICAÇÃO FASTAPI
+# APLICACAO FASTAPI
 # ══════════════════════════════════════════════════════════════════
 
 app = FastAPI(
     title="Stock Price Predictor API",
     description="""
-    ## 📈 API de Previsão de Preços de Ações com LSTM
+    ## API de Previsao de Precos de Acoes com LSTM
     
-    Esta API utiliza um modelo de Deep Learning (LSTM) para prever o preço 
-    de fechamento do próximo dia com base nos últimos 60 dias de histórico.
+    Esta API utiliza um modelo de Deep Learning (LSTM) para prever o preco 
+    de fechamento do proximo dia com base nos ultimos 60 dias de historico.
     
     ### Endpoints:
-    - **POST /predict**: Envia preços históricos e recebe a previsão
+    - **POST /predict**: Envia precos historicos e recebe a previsao
     - **GET /health**: Verifica o status da API e do modelo
     
     ### Tech Challenge - Fase 4
-    Pós-graduação em Machine Learning Engineering
+    Pos-graduacao em Machine Learning Engineering
     """,
     version="1.0.0",
     lifespan=lifespan
 )
 
 # ══════════════════════════════════════════════════════════════════
-# 🔌 ENDPOINTS
+# ENDPOINTS
 # ══════════════════════════════════════════════════════════════════
 
 @app.get(
@@ -294,18 +294,18 @@ async def root():
     }
 
 # ══════════════════════════════════════════════════════════════════
-# 🚀 EXECUÇÃO LOCAL
+# EXECUCAO LOCAL
 # ══════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
     import uvicorn
     
     print("\n" + "="*60)
-    print("📌 ETAPA 8: API FastAPI")
+    print("ETAPA 8: API FastAPI")
     print("="*60)
-    print("\n🌐 Iniciando servidor em http://localhost:8000")
-    print("📚 Documentação disponível em http://localhost:8000/docs")
-    print("\n💡 Pressione Ctrl+C para encerrar\n")
+    print("\nIniciando servidor em http://localhost:8000")
+    print("Documentacao disponivel em http://localhost:8000/docs")
+    print("\nPressione Ctrl+C para encerrar\n")
     
     uvicorn.run(
         "app:app",

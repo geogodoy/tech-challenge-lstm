@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════════════════
-# 📌 Hyperparameter Tuning - Busca por MAPE < 5%
-# 🎯 Objetivo: Encontrar configuração ótima do modelo
+# Hyperparameter Tuning - Busca por MAPE < 5%
+# Objetivo: Encontrar configuracao otima do modelo
 # ═══════════════════════════════════════════════════════════════
 
 import torch
@@ -76,14 +76,14 @@ def train_and_evaluate(
 
 def run_experiments():
     """
-    Executa experimentos com diferentes configurações.
+    Executa experimentos com diferentes configuracoes.
     """
     print("=" * 70)
-    print("🔬 HYPERPARAMETER TUNING - Buscando MAPE < 5%")
+    print("HYPERPARAMETER TUNING - Buscando MAPE < 5%")
     print("=" * 70)
     
     # Carregar dados
-    print("\n📥 Carregando dados...")
+    print("\nCarregando dados...")
     X_train, X_test, y_train, y_test, scaler = preprocess_data(save_scaler=False)
     
     # Configurações a testar
@@ -118,7 +118,7 @@ def run_experiments():
     best_config = None
     best_model = None
     
-    print(f"\n🧪 Executando {len(experiments)} experimentos...\n")
+    print(f"\nExecutando {len(experiments)} experimentos...\n")
     print("-" * 70)
     print(f"{'Experimento':<15} | {'MAPE':>8} | {'RMSE':>8} | {'MAE':>8} | {'Status':<10}")
     print("-" * 70)
@@ -134,7 +134,7 @@ def run_experiments():
         rmse = result['rmse']
         mae = result['mae']
         
-        status = "✅ < 5%!" if mape < 5 else ("⚠️ ~5%" if mape < 5.5 else "")
+        status = "< 5%!" if mape < 5 else ("~5%" if mape < 5.5 else "")
         
         print(f"{name:<15} | {mape:>7.2f}% | R${rmse:>5.2f} | R${mae:>5.2f} | {status}")
         
@@ -155,18 +155,18 @@ def run_experiments():
     
     # Resumo
     print(f"\n{'='*70}")
-    print("📊 RESUMO DOS EXPERIMENTOS")
+    print("RESUMO DOS EXPERIMENTOS")
     print(f"{'='*70}")
     
     # Ordenar por MAPE
     results_sorted = sorted(results, key=lambda x: x['mape'])
     
-    print("\n🏆 Top 5 configurações:")
+    print("\nTop 5 configuracoes:")
     for i, r in enumerate(results_sorted[:5], 1):
-        status = "✅" if r['mape'] < 5 else ""
+        status = "[OK]" if r['mape'] < 5 else ""
         print(f"   {i}. {r['name']}: MAPE = {r['mape']:.2f}% {status}")
     
-    print(f"\n🥇 Melhor configuração: {best_config['name']}")
+    print(f"\nMelhor configuracao: {best_config['name']}")
     print(f"   MAPE: {best_mape:.2f}%")
     print(f"   Hidden Size: {best_config['hidden_size']}")
     print(f"   Num Layers: {best_config['num_layers']}")
@@ -175,7 +175,7 @@ def run_experiments():
     print(f"   Learning Rate: {best_config['learning_rate']}")
     
     if best_mape < 5:
-        print(f"\n🎉 SUCESSO! Encontrada configuração com MAPE < 5%!")
+        print(f"\nSUCESSO! Encontrada configuracao com MAPE < 5%!")
         
         # Salvar melhor modelo
         save_path = MODELS_DIR / "model_lstm_optimized.pth"
@@ -186,9 +186,9 @@ def run_experiments():
             'rmse': results_sorted[0]['rmse'],
             'mae': results_sorted[0]['mae']
         }, save_path)
-        print(f"   💾 Modelo salvo em: {save_path}")
+        print(f"   Modelo salvo em: {save_path}")
     else:
-        print(f"\n⚠️ MAPE mínimo alcançado: {best_mape:.2f}%")
+        print(f"\nMAPE minimo alcancado: {best_mape:.2f}%")
         print("   Sugestões para melhorar:")
         print("   - Coletar mais dados históricos")
         print("   - Adicionar mais features (Volume, Open, High, Low)")

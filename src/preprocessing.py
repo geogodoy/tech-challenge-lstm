@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════════════════
-# 📌 ETAPA 3: Pré-processamento
-# 🎯 Objetivo: Normalizar dados e criar janelas temporais
+# ETAPA 3: Pre-processamento
+# Objetivo: Normalizar dados e criar janelas temporais
 # ═══════════════════════════════════════════════════════════════
 
 import numpy as np
@@ -15,7 +15,7 @@ import joblib
 from data_collection import TICKER, DATA_DIR, load_stock_data
 
 # ══════════════════════════════════════════════════════════════════
-# 🔧 CONFIGURAÇÕES
+# CONFIGURACOES
 # ══════════════════════════════════════════════════════════════════
 
 # Tamanho da janela temporal (60 dias = ~3 meses de histórico)
@@ -44,7 +44,7 @@ def normalize_data(data: np.ndarray) -> Tuple[np.ndarray, MinMaxScaler]:
     scaler = MinMaxScaler(feature_range=(0, 1))
     data_scaled = scaler.fit_transform(data)
     
-    print(f"📊 Dados normalizados:")
+    print(f"Dados normalizados:")
     print(f"   Original - Min: {data.min():.2f}, Max: {data.max():.2f}")
     print(f"   Normalizado - Min: {data_scaled.min():.4f}, Max: {data_scaled.max():.4f}")
     
@@ -84,7 +84,7 @@ def create_sequences(data: np.ndarray, seq_length: int = SEQ_LENGTH) -> Tuple[np
     X = np.array(X)
     y = np.array(y)
     
-    print(f"\n📐 Janelas temporais criadas:")
+    print(f"\nJanelas temporais criadas:")
     print(f"   Tamanho da janela: {seq_length} dias")
     print(f"   Total de sequências: {len(X)}")
     print(f"   X shape: {X.shape} (amostras, seq_length, features)")
@@ -119,7 +119,7 @@ def train_test_split(
     y_train = y[:split_idx]
     y_test = y[split_idx:]
     
-    print(f"\n✂️ Divisão treino/teste ({int(train_ratio*100)}/{int((1-train_ratio)*100)}):")
+    print(f"\nDivisao treino/teste ({int(train_ratio*100)}/{int((1-train_ratio)*100)}):")
     print(f"   Treino: {len(X_train)} amostras")
     print(f"   Teste:  {len(X_test)} amostras")
     
@@ -149,7 +149,7 @@ def to_tensors(
     y_train_t = torch.FloatTensor(y_train)
     y_test_t = torch.FloatTensor(y_test)
     
-    print(f"\n🔢 Conversão para tensores PyTorch:")
+    print(f"\nConversao para tensores PyTorch:")
     print(f"   X_train: {X_train_t.shape} ({X_train_t.dtype})")
     print(f"   y_train: {y_train_t.shape} ({y_train_t.dtype})")
     print(f"   X_test:  {X_test_t.shape} ({X_test_t.dtype})")
@@ -198,53 +198,53 @@ def preprocess_data(
     # 3️⃣ Normalizar os dados entre 0 e 1
     data_scaled, scaler = normalize_data(data)
     
-    # 4️⃣ Criar janelas deslizantes (sequências)
+    # Criar janelas deslizantes (sequencias)
     X, y = create_sequences(data_scaled, seq_length)
     
-    # 5️⃣ Dividir em treino e teste
+    # Dividir em treino e teste
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_ratio)
     
-    # 6️⃣ Converter para tensores PyTorch
+    # Converter para tensores PyTorch
     X_train_t, X_test_t, y_train_t, y_test_t = to_tensors(X_train, X_test, y_train, y_test)
     
-    # 7️⃣ Salvar scaler e configurações para uso posterior
+    # Salvar scaler e configuracoes para uso posterior
     if save_scaler:
         MODELS_DIR.mkdir(parents=True, exist_ok=True)
         
         # Salvar scaler
         scaler_path = MODELS_DIR / "scaler.pkl"
         joblib.dump(scaler, scaler_path)
-        print(f"\n💾 Scaler salvo em: {scaler_path}")
+        print(f"\nScaler salvo em: {scaler_path}")
         
-        # Salvar configurações
+        # Salvar configuracoes
         config = {
             'seq_length': seq_length,
             'ticker': ticker,
             'train_ratio': train_ratio,
-            'input_size': 1,  # Número de features (apenas Close)
+            'input_size': 1,  # Numero de features (apenas Close)
             'n_train_samples': len(X_train),
             'n_test_samples': len(X_test)
         }
         config_path = MODELS_DIR / "config.pkl"
         joblib.dump(config, config_path)
-        print(f"💾 Config salvo em: {config_path}")
+        print(f"Config salvo em: {config_path}")
     
     return X_train_t, X_test_t, y_train_t, y_test_t, scaler
 
 
 # ══════════════════════════════════════════════════════════════════
-# 🚀 EXECUÇÃO
+# EXECUCAO
 # ══════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
-    # Executar pré-processamento
+    # Executar pre-processamento
     X_train, X_test, y_train, y_test, scaler = preprocess_data()
     
-    # ✅ Checkpoint: Dados prontos para alimentar a LSTM!
+    # Checkpoint: Dados prontos para alimentar a LSTM!
     print("\n" + "="*60)
-    print("🎉 CHECKPOINT: Dados prontos para a LSTM!")
+    print("CHECKPOINT: Dados prontos para a LSTM!")
     print("="*60)
-    print(f"\n📋 Resumo final:")
+    print(f"\nResumo final:")
     print(f"   X_train shape: {X_train.shape}")
     print(f"   y_train shape: {y_train.shape}")
     print(f"   X_test shape:  {X_test.shape}")
